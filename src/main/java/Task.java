@@ -1,7 +1,7 @@
 /**
  * Represents one task in the task list and whether it has been completed.
  */
-public class Task {
+public abstract class Task {
     private final String description;
     private boolean isDone;
 
@@ -45,5 +45,29 @@ public class Task {
      */
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * Returns the icon that identifies this task's type.
+     *
+     * @return a one-letter task type icon
+     */
+    protected abstract String getTypeIcon();
+
+    /**
+     * Returns any date or time details belonging to this task.
+     *
+     * @return formatted date or time details, or an empty string for a todo
+     */
+    protected abstract String getTimeDetails();
+
+    /**
+     * Returns this task in the format used by the task list.
+     *
+     * @return formatted task text
+     */
+    @Override
+    public String toString() {
+        return "[" + getTypeIcon() + "][" + getStatusIcon() + "] " + description + getTimeDetails();
     }
 }

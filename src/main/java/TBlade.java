@@ -42,7 +42,7 @@ public class TBlade {
             if (command.equals("list")) {
                 printLine("Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    printLine((i + 1) + ".[" + tasks[i].getStatusIcon() + "] " + tasks[i].getDescription());
+                    printLine((i + 1) + "." + tasks[i]);
                 }
             } else if (command.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(command.substring(5));
@@ -56,10 +56,33 @@ public class TBlade {
                 tasks[taskIndex].unmarkAsDone();
                 printLine("OK, I've marked this task as not done yet:");
                 printLine("  [ ] " + tasks[taskIndex].getDescription());
-            } else if (taskCount < MAX_TASKS) {
-                tasks[taskCount] = new Task(command);
+            } else if (command.startsWith("todo ") && taskCount < MAX_TASKS) {
+                tasks[taskCount] = new Todo(command.substring(5));
+                printLine("Got it. I've added this task:");
+                printLine("  " + tasks[taskCount]);
                 taskCount++;
-                printLine("added: " + command);
+                printLine("Now you have " + taskCount + " tasks in the list.");
+            } else if (command.startsWith("deadline ") && taskCount < MAX_TASKS) {
+                String[] parts = command.substring(9).split(" /by ", 2);
+                tasks[taskCount] = new Deadline(parts[0], parts[1]);
+                printLine("Got it. I've added this task:");
+                printLine("  " + tasks[taskCount]);
+                taskCount++;
+                printLine("Now you have " + taskCount + " tasks in the list.");
+            } else if (command.startsWith("event ") && taskCount < MAX_TASKS) {
+                String[] descriptionAndTimes = command.substring(6).split(" /from ", 2);
+                String[] times = descriptionAndTimes[1].split(" /to ", 2);
+                tasks[taskCount] = new Event(descriptionAndTimes[0], times[0], times[1]);
+                printLine("Got it. I've added this task:");
+                printLine("  " + tasks[taskCount]);
+                taskCount++;
+                printLine("Now you have " + taskCount + " tasks in the list.");
+            } else if (taskCount < MAX_TASKS) {
+                tasks[taskCount] = new Todo(command);
+                taskCount++;
+                printLine("Got it. I've added this task:");
+                printLine("  " + tasks[taskCount - 1]);
+                printLine("Now you have " + taskCount + " tasks in the list.");
             }
             printLine(separator);
         }
