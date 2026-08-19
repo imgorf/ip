@@ -37,3 +37,5 @@ Do not commit or push unless explicitly asked.
 ## UI regression testing
 
 After each code update, update `test/ui-test-plan.md` if the planned console behaviour changed, then invoke the project-specific `test-ui` skill. The skill's runner must pass before handing off the change.
+
+As the chatbot evolves, handle errors introduced by each new feature. Error messages should state what is wrong and how the user can correct the command.

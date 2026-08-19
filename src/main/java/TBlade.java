@@ -33,59 +33,161 @@ public class TBlade {
             String command = scanner.nextLine();
             printLine(separator);
 
-            if (command.equals("bye")) {
-                printLine("Bye. Hope to see you again soon!");
-                printLine(separator);
-                break;
-            }
-
-            if (command.equals("list")) {
-                printLine("Here are the tasks in your list:");
-                for (int i = 0; i < taskCount; i++) {
-                    printLine((i + 1) + "." + tasks[i]);
+            try {
+                if (command.isBlank()) {
+                    throw new TBladeException("Please enter a command. Use: todo, deadline, event, list, mark, unmark, or bye.");
+                } else if (command.equals("bye")) {
+                    printLine("Bye. Hope to see you again soon!");
+                    printLine(separator);
+                    break;
+                } else if (command.startsWith("bye ")) {
+                    throw new TBladeException("The bye command does not take extra text. Use: bye");
+                } else if (command.equals("list")) {
+                    printLine("Here are the tasks in your list:");
+                    for (int i = 0; i < taskCount; i++) {
+                        printLine((i + 1) + "." + tasks[i]);
+                    }
+                } else if (command.startsWith("list ")) {
+                    throw new TBladeException("The list command does not take extra text. Use: list");
+                } else if (command.equals("mark") || command.startsWith("mark ")) {
+                    int taskIndex = getTaskIndex(command, "mark", taskCount);
+                    tasks[taskIndex].markAsDone();
+                    printLine("Nice! I've marked this task as done:");
+                    printLine("  [X] " + tasks[taskIndex].getDescription());
+                } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+                    int taskIndex = getTaskIndex(command, "unmark", taskCount);
+                    tasks[taskIndex].unmarkAsDone();
+                    printLine("OK, I've marked this task as not done yet:");
+                    printLine("  [ ] " + tasks[taskIndex].getDescription());
+                } else if (command.equals("todo") || command.startsWith("todo ")) {
+                    String description = command.substring(4).trim();
+                    if (description.isEmpty()) {
+                        throw new TBladeException("The description of a todo cannot be empty. Use: todo DESCRIPTION");
+                    }
+                    checkTaskListHasSpace(taskCount);
+                    tasks[taskCount] = new Todo(description);
+                    taskCount++;
+                    printAddedTask(tasks[taskCount - 1], taskCount);
+                } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+                    String details = command.substring(8).trim();
+                    if (details.isEmpty() || details.startsWith("/by")) {
+                        throw new TBladeException("The description of a deadline cannot be empty. "
+                                + "Use: deadline DESCRIPTION /by DATE");
+                    }
+                    int byIndex = details.indexOf(" /by");
+                    if (byIndex < 0) {
+                        throw new TBladeException("A deadline needs a /by date. "
+                                + "Use: deadline DESCRIPTION /by DATE");
+                    }
+                    String description = details.substring(0, byIndex).trim();
+                    String by = details.substring(byIndex + 4).trim();
+                    if (by.isEmpty()) {
+                        throw new TBladeException("The /by date cannot be empty. "
+                                + "Use: deadline DESCRIPTION /by DATE");
+                    }
+                    checkTaskListHasSpace(taskCount);
+                    tasks[taskCount] = new Deadline(description, by);
+                    taskCount++;
+                    printAddedTask(tasks[taskCount - 1], taskCount);
+                } else if (command.equals("event") || command.startsWith("event ")) {
+                    String details = command.substring(5).trim();
+                    if (details.isEmpty() || details.startsWith("/from")) {
+                        throw new TBladeException("The description of an event cannot be empty. "
+                                + "Use: event DESCRIPTION /from START /to END");
+                    }
+                    int fromIndex = details.indexOf(" /from");
+                    if (fromIndex < 0) {
+                        throw new TBladeException("An event needs a /from start time. "
+                                + "Use: event DESCRIPTION /from START /to END");
+                    }
+                    String description = details.substring(0, fromIndex).trim();
+                    String times = details.substring(fromIndex + 6).trim();
+                    if (times.isEmpty()) {
+                        throw new TBladeException("The /from start time cannot be empty. "
+                                + "Use: event DESCRIPTION /from START /to END");
+                    }
+                    int toIndex = times.indexOf(" /to");
+                    if (toIndex < 0) {
+                        throw new TBladeException("An event needs a /to end time. "
+                                + "Use: event DESCRIPTION /from START /to END");
+                    }
+                    String from = times.substring(0, toIndex).trim();
+                    String to = times.substring(toIndex + 4).trim();
+                    if (from.isEmpty()) {
+                        throw new TBladeException("The /from start time cannot be empty. "
+                                + "Use: event DESCRIPTION /from START /to END");
+                    }
+                    if (to.isEmpty()) {
+                        throw new TBladeException("The /to end time cannot be empty. "
+                                + "Use: event DESCRIPTION /from START /to END");
+                    }
+                    checkTaskListHasSpace(taskCount);
+                    tasks[taskCount] = new Event(description, from, to);
+                    taskCount++;
+                    printAddedTask(tasks[taskCount - 1], taskCount);
+                } else {
+                    throw new TBladeException("I don't know that command. Use: todo, deadline, event, list, mark, unmark, or bye.");
                 }
-            } else if (command.startsWith("mark ")) {
-                int taskNumber = Integer.parseInt(command.substring(5));
-                int taskIndex = taskNumber - 1;
-                tasks[taskIndex].markAsDone();
-                printLine("Nice! I've marked this task as done:");
-                printLine("  [X] " + tasks[taskIndex].getDescription());
-            } else if (command.startsWith("unmark ")) {
-                int taskNumber = Integer.parseInt(command.substring(7));
-                int taskIndex = taskNumber - 1;
-                tasks[taskIndex].unmarkAsDone();
-                printLine("OK, I've marked this task as not done yet:");
-                printLine("  [ ] " + tasks[taskIndex].getDescription());
-            } else if (command.startsWith("todo ") && taskCount < MAX_TASKS) {
-                tasks[taskCount] = new Todo(command.substring(5));
-                printLine("Got it. I've added this task:");
-                printLine("  " + tasks[taskCount]);
-                taskCount++;
-                printLine("Now you have " + taskCount + " tasks in the list.");
-            } else if (command.startsWith("deadline ") && taskCount < MAX_TASKS) {
-                String[] parts = command.substring(9).split(" /by ", 2);
-                tasks[taskCount] = new Deadline(parts[0], parts[1]);
-                printLine("Got it. I've added this task:");
-                printLine("  " + tasks[taskCount]);
-                taskCount++;
-                printLine("Now you have " + taskCount + " tasks in the list.");
-            } else if (command.startsWith("event ") && taskCount < MAX_TASKS) {
-                String[] descriptionAndTimes = command.substring(6).split(" /from ", 2);
-                String[] times = descriptionAndTimes[1].split(" /to ", 2);
-                tasks[taskCount] = new Event(descriptionAndTimes[0], times[0], times[1]);
-                printLine("Got it. I've added this task:");
-                printLine("  " + tasks[taskCount]);
-                taskCount++;
-                printLine("Now you have " + taskCount + " tasks in the list.");
-            } else if (taskCount < MAX_TASKS) {
-                tasks[taskCount] = new Todo(command);
-                taskCount++;
-                printLine("Got it. I've added this task:");
-                printLine("  " + tasks[taskCount - 1]);
-                printLine("Now you have " + taskCount + " tasks in the list.");
+            } catch (TBladeException exception) {
+                printLine("OOPS!!! " + exception.getMessage());
             }
             printLine(separator);
         }
+    }
+
+    /**
+     * Converts a command's task number to a valid zero-based array index.
+     *
+     * @param command full command entered by the user
+     * @param commandWord the command word before its number
+     * @param taskCount number of tasks currently stored
+     * @return the zero-based index of the requested task
+     * @throws TBladeException if the command does not contain a valid task number
+     */
+    private static int getTaskIndex(String command, String commandWord, int taskCount) throws TBladeException {
+        String taskNumberText = command.substring(commandWord.length()).trim();
+        if (taskNumberText.isEmpty()) {
+            throw new TBladeException("Please provide a task number. Use: " + commandWord + " TASK_NUMBER");
+        }
+        if (taskCount == 0) {
+            throw new TBladeException("There are no tasks to " + commandWord + ". Add a task first.");
+        }
+        try {
+            int taskNumber = Integer.parseInt(taskNumberText);
+            if (taskNumber < 1 || taskNumber > taskCount) {
+                throw new TBladeException("Task number must be between 1 and " + taskCount + ". "
+                        + "Use: " + commandWord + " TASK_NUMBER");
+            }
+            return taskNumber - 1;
+        } catch (NumberFormatException exception) {
+            throw new TBladeException("Task number must be a whole number. "
+                    + "Use: " + commandWord + " TASK_NUMBER");
+        }
+    }
+
+    /**
+     * Ensures that another task can be stored in the fixed-size task array.
+     *
+     * @param taskCount number of tasks currently stored
+     * @throws TBladeException if the list has reached its capacity
+     */
+    private static void checkTaskListHasSpace(int taskCount) throws TBladeException {
+        if (taskCount >= MAX_TASKS) {
+            throw new TBladeException("The task list already has " + MAX_TASKS + " tasks. "
+                    + "You cannot add another task in this version.");
+        }
+    }
+
+    /**
+     * Displays the confirmation shown after a task is added.
+     *
+     * @param task the task that was added
+     * @param taskCount number of tasks now in the list
+     */
+    private static void printAddedTask(Task task, int taskCount) {
+        printLine("Got it. I've added this task:");
+        printLine("  " + task);
+        printLine("Now you have " + taskCount + " tasks in the list.");
     }
 
     /**

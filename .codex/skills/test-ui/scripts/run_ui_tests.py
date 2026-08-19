@@ -14,7 +14,7 @@ DEFAULT_PLAN = PROJECT_ROOT / "test" / "ui-test-plan.md"
 CASE_PATTERN = re.compile(
     r"^## Test Case: (?P<name>.+?)\n"
     r"### Aim\n(?P<aim>.+?)\n"
-    r"### Inputs\n```text\n(?P<inputs>.*?)\n```\n"
+    r"### Inputs\n```text\n(?P<inputs>.*?)\n```\n+"
     r"### Expected output\n```text\n(?P<expected>.*?)\n```",
     re.MULTILINE | re.DOTALL,
 )
