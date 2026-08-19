@@ -5,9 +5,10 @@ import java.util.Scanner;
  */
 public class TBlade {
     private static final String PIG = " 🐷";
+    private static final int MAX_TASKS = 100;
 
     /**
-     * Displays a greeting, echoes user commands, and exits when the user enters {@code bye}.
+     * Displays a greeting, stores entered tasks, lists them on request, and exits when the user enters {@code bye}.
      *
      * @param args command-line arguments, which are not used by this application
      */
@@ -26,6 +27,8 @@ public class TBlade {
         printLine(separator);
 
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[MAX_TASKS];
+        int taskCount = 0;
         while (true) {
             String command = scanner.nextLine();
             printLine(separator);
@@ -36,7 +39,15 @@ public class TBlade {
                 break;
             }
 
-            printLine(" " + command);
+            if (command.equals("list")) {
+                for (int i = 0; i < taskCount; i++) {
+                    printLine((i + 1) + ". " + tasks[i]);
+                }
+            } else if (taskCount < MAX_TASKS) {
+                tasks[taskCount] = command;
+                taskCount++;
+                printLine("added: " + command);
+            }
             printLine(separator);
         }
     }
