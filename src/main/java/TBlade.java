@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -27,15 +29,14 @@ public class TBlade {
         printLine(separator);
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        List<Task> tasks = new ArrayList<>();
         while (true) {
             String command = scanner.nextLine();
             printLine(separator);
 
             try {
                 if (command.isBlank()) {
-                    throw new TBladeException("Please enter a command. Use: todo, deadline, event, list, mark, unmark, or bye.");
+                    throw new TBladeException("Please enter a command. Use: todo, deadline, event, list, mark, unmark, delete, or bye.");
                 } else if (command.equals("bye")) {
                     printLine("Bye. Hope to see you again soon!");
                     printLine(separator);
@@ -44,30 +45,35 @@ public class TBlade {
                     throw new TBladeException("The bye command does not take extra text. Use: bye");
                 } else if (command.equals("list")) {
                     printLine("Here are the tasks in your list:");
-                    for (int i = 0; i < taskCount; i++) {
-                        printLine((i + 1) + "." + tasks[i]);
+                    for (int i = 0; i < tasks.size(); i++) {
+                        printLine((i + 1) + "." + tasks.get(i));
                     }
                 } else if (command.startsWith("list ")) {
                     throw new TBladeException("The list command does not take extra text. Use: list");
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
-                    int taskIndex = getTaskIndex(command, "mark", taskCount);
-                    tasks[taskIndex].markAsDone();
+                    int taskIndex = getTaskIndex(command, "mark", tasks.size());
+                    tasks.get(taskIndex).markAsDone();
                     printLine("Nice! I've marked this task as done:");
-                    printLine("  [X] " + tasks[taskIndex].getDescription());
+                    printLine("  [X] " + tasks.get(taskIndex).getDescription());
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                    int taskIndex = getTaskIndex(command, "unmark", taskCount);
-                    tasks[taskIndex].unmarkAsDone();
+                    int taskIndex = getTaskIndex(command, "unmark", tasks.size());
+                    tasks.get(taskIndex).unmarkAsDone();
                     printLine("OK, I've marked this task as not done yet:");
-                    printLine("  [ ] " + tasks[taskIndex].getDescription());
+                    printLine("  [ ] " + tasks.get(taskIndex).getDescription());
+                } else if (command.equals("delete") || command.startsWith("delete ")) {
+                    int taskIndex = getTaskIndex(command, "delete", tasks.size());
+                    Task removedTask = tasks.remove(taskIndex);
+                    printLine("Noted. I've removed this task:");
+                    printLine("  " + removedTask);
+                    printLine("Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.substring(4).trim();
                     if (description.isEmpty()) {
                         throw new TBladeException("The description of a todo cannot be empty. Use: todo DESCRIPTION");
                     }
-                    checkTaskListHasSpace(taskCount);
-                    tasks[taskCount] = new Todo(description);
-                    taskCount++;
-                    printAddedTask(tasks[taskCount - 1], taskCount);
+                    checkTaskListHasSpace(tasks.size());
+                    tasks.add(new Todo(description));
+                    printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                     String details = command.substring(8).trim();
                     if (details.isEmpty() || details.startsWith("/by")) {
@@ -85,10 +91,9 @@ public class TBlade {
                         throw new TBladeException("The /by date cannot be empty. "
                                 + "Use: deadline DESCRIPTION /by DATE");
                     }
-                    checkTaskListHasSpace(taskCount);
-                    tasks[taskCount] = new Deadline(description, by);
-                    taskCount++;
-                    printAddedTask(tasks[taskCount - 1], taskCount);
+                    checkTaskListHasSpace(tasks.size());
+                    tasks.add(new Deadline(description, by));
+                    printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                 } else if (command.equals("event") || command.startsWith("event ")) {
                     String details = command.substring(5).trim();
                     if (details.isEmpty() || details.startsWith("/from")) {
@@ -121,12 +126,11 @@ public class TBlade {
                         throw new TBladeException("The /to end time cannot be empty. "
                                 + "Use: event DESCRIPTION /from START /to END");
                     }
-                    checkTaskListHasSpace(taskCount);
-                    tasks[taskCount] = new Event(description, from, to);
-                    taskCount++;
-                    printAddedTask(tasks[taskCount - 1], taskCount);
+                    checkTaskListHasSpace(tasks.size());
+                    tasks.add(new Event(description, from, to));
+                    printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                 } else {
-                    throw new TBladeException("I don't know that command. Use: todo, deadline, event, list, mark, unmark, or bye.");
+                    throw new TBladeException("I don't know that command. Use: todo, deadline, event, list, mark, unmark, delete, or bye.");
                 }
             } catch (TBladeException exception) {
                 printLine("OOPS!!! " + exception.getMessage());
@@ -136,7 +140,7 @@ public class TBlade {
     }
 
     /**
-     * Converts a command's task number to a valid zero-based array index.
+     * Converts a command's task number to a valid zero-based list index.
      *
      * @param command full command entered by the user
      * @param commandWord the command word before its number
@@ -166,7 +170,7 @@ public class TBlade {
     }
 
     /**
-     * Ensures that another task can be stored in the fixed-size task array.
+     * Ensures that another task can be stored in the task list.
      *
      * @param taskCount number of tasks currently stored
      * @throws TBladeException if the list has reached its capacity

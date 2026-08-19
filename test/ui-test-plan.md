@@ -84,7 +84,7 @@ Got it. I've added this task: 🐷
 Now you have 1 tasks in the list. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
-OOPS!!! I don't know that command. Use: todo, deadline, event, list, mark, unmark, or bye. 🐷
+OOPS!!! I don't know that command. Use: todo, deadline, event, list, mark, unmark, delete, or bye. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 OOPS!!! The description of a deadline cannot be empty. Use: deadline DESCRIPTION /by DATE 🐷
@@ -221,6 +221,69 @@ Bye. Hope to see you again soon! 🐷
 ____________________________________________________________ 🐷
 ```
 
+## Test Case: Delete a task and renumber the list
+### Aim
+Verify that deleting a completed task removes it, preserves the other tasks, and renumbers the remaining list entries.
+### Inputs
+```text
+todo read book
+deadline return book /by June 6th
+event project meeting /from Aug 6th 2pm /to 4pm
+mark 1
+mark 2
+delete 2
+list
+bye
+```
+### Expected output
+```text
+____________________________________________________________ 🐷
+#####  ####   #       ###   ####   ##### 🐷
+  #    #   #  #      #   #  #   #  # 🐷
+  #    ####   #      #####  #   #  #### 🐷
+  #    #   #  #      #   #  #   #  # 🐷
+  #    ####   #####  #   #  ####   ##### 🐷
+Hello! I'm TBlade. 🐷
+What can I do for you? 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Got it. I've added this task: 🐷
+  [T][ ] read book 🐷
+Now you have 1 tasks in the list. 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Got it. I've added this task: 🐷
+  [D][ ] return book (by: June 6th) 🐷
+Now you have 2 tasks in the list. 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Got it. I've added this task: 🐷
+  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm) 🐷
+Now you have 3 tasks in the list. 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Nice! I've marked this task as done: 🐷
+  [X] read book 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Nice! I've marked this task as done: 🐷
+  [X] return book 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Noted. I've removed this task: 🐷
+  [D][X] return book (by: June 6th) 🐷
+Now you have 2 tasks in the list. 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Here are the tasks in your list: 🐷
+1.[T][X] read book 🐷
+2.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm) 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Bye. Hope to see you again soon! 🐷
+____________________________________________________________ 🐷
+```
+
 ## Test Case: Explain all current command-format errors
 ### Aim
 Verify that every current command reports an actionable error for missing or extra input, and that all rejected commands leave the list unchanged before a later valid task is added.
@@ -231,6 +294,7 @@ list extra
 bye now
 mark
 unmark 1
+delete
 deadline report
 deadline report /by
 event
@@ -254,7 +318,7 @@ Hello! I'm TBlade. 🐷
 What can I do for you? 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
-OOPS!!! Please enter a command. Use: todo, deadline, event, list, mark, unmark, or bye. 🐷
+OOPS!!! Please enter a command. Use: todo, deadline, event, list, mark, unmark, delete, or bye. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 OOPS!!! The list command does not take extra text. Use: list 🐷
@@ -267,6 +331,9 @@ OOPS!!! Please provide a task number. Use: mark TASK_NUMBER 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 OOPS!!! There are no tasks to unmark. Add a task first. 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+OOPS!!! Please provide a task number. Use: delete TASK_NUMBER 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 OOPS!!! A deadline needs a /by date. Use: deadline DESCRIPTION /by DATE 🐷
@@ -327,7 +394,7 @@ ____________________________________________________________ 🐷
 OOPS!!! The description of a todo cannot be empty. Use: todo DESCRIPTION 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
-OOPS!!! I don't know that command. Use: todo, deadline, event, list, mark, unmark, or bye. 🐷
+OOPS!!! I don't know that command. Use: todo, deadline, event, list, mark, unmark, delete, or bye. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 Bye. Hope to see you again soon! 🐷
