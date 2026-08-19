@@ -3,15 +3,18 @@
  */
 public abstract class Task {
     private final String description;
+    private final TaskType type;
     private boolean isDone;
 
     /**
      * Creates an unfinished task with the given description.
      *
      * @param description text that describes the task
+     * @param type the category of this task
      */
-    public Task(String description) {
+    public Task(String description, TaskType type) {
         this.description = description;
+        this.type = type;
         this.isDone = false;
     }
 
@@ -48,13 +51,6 @@ public abstract class Task {
     }
 
     /**
-     * Returns the icon that identifies this task's type.
-     *
-     * @return a one-letter task type icon
-     */
-    protected abstract String getTypeIcon();
-
-    /**
      * Returns any date or time details belonging to this task.
      *
      * @return formatted date or time details, or an empty string for a todo
@@ -68,6 +64,6 @@ public abstract class Task {
      */
     @Override
     public String toString() {
-        return "[" + getTypeIcon() + "][" + getStatusIcon() + "] " + description + getTimeDetails();
+        return "[" + type.getIcon() + "][" + getStatusIcon() + "] " + description + getTimeDetails();
     }
 }
