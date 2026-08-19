@@ -8,7 +8,7 @@ public class TBlade {
     private static final int MAX_TASKS = 100;
 
     /**
-     * Displays a greeting, stores entered tasks, lists them on request, and exits when the user enters {@code bye}.
+     * Displays a greeting, stores tasks, changes their completion status, lists them, and exits on {@code bye}.
      *
      * @param args command-line arguments, which are not used by this application
      */
@@ -27,7 +27,7 @@ public class TBlade {
         printLine(separator);
 
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[MAX_TASKS];
+        Task[] tasks = new Task[MAX_TASKS];
         int taskCount = 0;
         while (true) {
             String command = scanner.nextLine();
@@ -40,11 +40,24 @@ public class TBlade {
             }
 
             if (command.equals("list")) {
+                printLine("Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    printLine((i + 1) + ". " + tasks[i]);
+                    printLine((i + 1) + ".[" + tasks[i].getStatusIcon() + "] " + tasks[i].getDescription());
                 }
+            } else if (command.startsWith("mark ")) {
+                int taskNumber = Integer.parseInt(command.substring(5));
+                int taskIndex = taskNumber - 1;
+                tasks[taskIndex].markAsDone();
+                printLine("Nice! I've marked this task as done:");
+                printLine("  [X] " + tasks[taskIndex].getDescription());
+            } else if (command.startsWith("unmark ")) {
+                int taskNumber = Integer.parseInt(command.substring(7));
+                int taskIndex = taskNumber - 1;
+                tasks[taskIndex].unmarkAsDone();
+                printLine("OK, I've marked this task as not done yet:");
+                printLine("  [ ] " + tasks[taskIndex].getDescription());
             } else if (taskCount < MAX_TASKS) {
-                tasks[taskCount] = command;
+                tasks[taskCount] = new Task(command);
                 taskCount++;
                 printLine("added: " + command);
             }
