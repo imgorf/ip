@@ -51,6 +51,24 @@ public abstract class Task {
     }
 
     /**
+     * Returns this task's category for storage.
+     *
+     * @return the category of this task
+     */
+    public TaskType getType() {
+        return type;
+    }
+
+    /**
+     * Returns whether this task has been completed.
+     *
+     * @return {@code true} if this task is completed
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
      * Returns any date or time details belonging to this task.
      *
      * @return formatted date or time details, or an empty string for a todo

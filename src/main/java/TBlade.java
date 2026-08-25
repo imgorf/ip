@@ -29,7 +29,14 @@ public class TBlade {
         printLine(separator);
 
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage();
+        List<Task> tasks;
+        try {
+            tasks = storage.load();
+        } catch (TBladeException exception) {
+            printLine("OOPS!!! " + exception.getMessage());
+            tasks = new ArrayList<>();
+        }
         while (true) {
             String command = scanner.nextLine();
             printLine(separator);
@@ -53,16 +60,19 @@ public class TBlade {
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     int taskIndex = getTaskIndex(command, "mark", tasks.size());
                     tasks.get(taskIndex).markAsDone();
+                    storage.save(tasks);
                     printLine("Nice! I've marked this task as done:");
                     printLine("  [X] " + tasks.get(taskIndex).getDescription());
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                     int taskIndex = getTaskIndex(command, "unmark", tasks.size());
                     tasks.get(taskIndex).unmarkAsDone();
+                    storage.save(tasks);
                     printLine("OK, I've marked this task as not done yet:");
                     printLine("  [ ] " + tasks.get(taskIndex).getDescription());
                 } else if (command.equals("delete") || command.startsWith("delete ")) {
                     int taskIndex = getTaskIndex(command, "delete", tasks.size());
                     Task removedTask = tasks.remove(taskIndex);
+                    storage.save(tasks);
                     printLine("Noted. I've removed this task:");
                     printLine("  " + removedTask);
                     printLine("Now you have " + tasks.size() + " tasks in the list.");
@@ -73,6 +83,7 @@ public class TBlade {
                     }
                     checkTaskListHasSpace(tasks.size());
                     tasks.add(new Todo(description));
+                    storage.save(tasks);
                     printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                     String details = command.substring(8).trim();
@@ -93,6 +104,7 @@ public class TBlade {
                     }
                     checkTaskListHasSpace(tasks.size());
                     tasks.add(new Deadline(description, by));
+                    storage.save(tasks);
                     printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                 } else if (command.equals("event") || command.startsWith("event ")) {
                     String details = command.substring(5).trim();
@@ -128,6 +140,7 @@ public class TBlade {
                     }
                     checkTaskListHasSpace(tasks.size());
                     tasks.add(new Event(description, from, to));
+                    storage.save(tasks);
                     printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                 } else {
                     throw new TBladeException("I don't know that command. Use: todo, deadline, event, list, mark, unmark, delete, or bye.");

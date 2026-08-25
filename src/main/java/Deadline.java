@@ -15,6 +15,15 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /**
+     * Returns the deadline text for storage.
+     *
+     * @return the deadline text
+     */
+    public String getBy() {
+        return by;
+    }
+
     @Override
     protected String getTimeDetails() {
         return " (by: " + by + ")";

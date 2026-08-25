@@ -18,6 +18,24 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Returns the event start text for storage.
+     *
+     * @return the event start text
+     */
+    public String getFrom() {
+        return from;
+    }
+
+    /**
+     * Returns the event end text for storage.
+     *
+     * @return the event end text
+     */
+    public String getTo() {
+        return to;
+    }
+
     @Override
     protected String getTimeDetails() {
         return " (from: " + from + " to: " + to + ")";
