@@ -65,13 +65,15 @@ def main() -> None:
     try:
         compile_program(classes_directory)
         for case in cases:
-            result = subprocess.run(
-                ["java", "-cp", str(classes_directory), "TBlade"],
-                input=case["inputs"] + "\n",
-                text=True,
-                capture_output=True,
-                check=False,
-            )
+            with tempfile.TemporaryDirectory(prefix="tblade-ui-session-") as session_directory:
+                result = subprocess.run(
+                    ["java", "-cp", str(classes_directory), "TBlade"],
+                    input=case["inputs"] + "\n",
+                    text=True,
+                    capture_output=True,
+                    check=False,
+                    cwd=session_directory,
+                )
             actual = result.stdout
             display_session(case, actual)
             if result.returncode != 0 or actual != case["expected"] + "\n":
