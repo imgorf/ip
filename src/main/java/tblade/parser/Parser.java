@@ -12,16 +12,26 @@ import tblade.exception.TBladeException;
 public class Parser {
     /**
      * The description and due date parsed from a {@code deadline} command.
+     *
+     * @param description text that describes the deadline task
+     * @param by the date by which the task must be completed
      */
     public record DeadlineArgs(String description, LocalDate by) {
     }
 
     /**
      * The description, start, and end parsed from an {@code event} command.
+     *
+     * @param description text that describes the event task
+     * @param from the event start text entered by the user
+     * @param to the event end text entered by the user
      */
     public record EventArgs(String description, String from, String to) {
     }
 
+    /**
+     * Prevents instantiation; Parser only exposes static methods.
+     */
     private Parser() {
     }
 

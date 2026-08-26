@@ -31,6 +31,11 @@ public class Deadline extends Task {
         return by;
     }
 
+    /**
+     * Returns the {@code (by: ...)} suffix shown after a deadline's description.
+     *
+     * @return the formatted due date, wrapped as a "by" suffix
+     */
     @Override
     protected String getTimeDetails() {
         return " (by: " + by.format(DISPLAY_FORMAT) + ")";

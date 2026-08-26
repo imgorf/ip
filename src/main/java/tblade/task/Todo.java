@@ -13,6 +13,11 @@ public class Todo extends Task {
         super(description, TaskType.TODO);
     }
 
+    /**
+     * Returns an empty string, since a todo has no date or time.
+     *
+     * @return an empty string
+     */
     @Override
     protected String getTimeDetails() {
         return "";

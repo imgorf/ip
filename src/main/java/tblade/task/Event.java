@@ -38,6 +38,11 @@ public class Event extends Task {
         return to;
     }
 
+    /**
+     * Returns the {@code (from: ... to: ...)} suffix shown after an event's description.
+     *
+     * @return the formatted start and end, wrapped as a "from ... to ..." suffix
+     */
     @Override
     protected String getTimeDetails() {
         return " (from: " + from + " to: " + to + ")";
