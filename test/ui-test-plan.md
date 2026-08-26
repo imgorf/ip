@@ -8,7 +8,7 @@ Verify that todo, deadline, and event commands create the correct task subtype a
 ### Inputs
 ```text
 todo borrow book
-deadline return book /by Sunday
+deadline return book /by 2026-03-15
 event project meeting /from Mon 2pm /to 4pm
 list
 bye
@@ -31,7 +31,7 @@ Now you have 1 tasks in the list. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 Got it. I've added this task: 🐷
-  [D][ ] return book (by: Sunday) 🐷
+  [D][ ] return book (by: Mar 15 2026) 🐷
 Now you have 2 tasks in the list. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
@@ -42,7 +42,7 @@ ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 Here are the tasks in your list: 🐷
 1.[T][ ] borrow book 🐷
-2.[D][ ] return book (by: Sunday) 🐷
+2.[D][ ] return book (by: Mar 15 2026) 🐷
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm) 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
@@ -58,7 +58,7 @@ Verify that rejected unknown, incomplete deadline, incomplete event, and invalid
 todo first task
 blah
 deadline /by Friday
-deadline submit report /by Friday
+deadline submit report /by 2026-03-20
 event workshop /from Monday
 event workshop /from Monday /to Tuesday
 mark 99
@@ -91,7 +91,7 @@ OOPS!!! The description of a deadline cannot be empty. Use: deadline DESCRIPTION
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 Got it. I've added this task: 🐷
-  [D][ ] submit report (by: Friday) 🐷
+  [D][ ] submit report (by: Mar 20 2026) 🐷
 Now you have 2 tasks in the list. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
@@ -115,7 +115,7 @@ ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 Here are the tasks in your list: 🐷
 1.[T][ ] first task 🐷
-2.[D][X] submit report (by: Friday) 🐷
+2.[D][X] submit report (by: Mar 20 2026) 🐷
 3.[E][ ] workshop (from: Monday to: Tuesday) 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
@@ -227,7 +227,7 @@ Verify that deleting a completed task removes it, preserves the other tasks, and
 ### Inputs
 ```text
 todo read book
-deadline return book /by June 6th
+deadline return book /by 2026-06-06
 event project meeting /from Aug 6th 2pm /to 4pm
 mark 1
 mark 2
@@ -253,7 +253,7 @@ Now you have 1 tasks in the list. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 Got it. I've added this task: 🐷
-  [D][ ] return book (by: June 6th) 🐷
+  [D][ ] return book (by: Jun 06 2026) 🐷
 Now you have 2 tasks in the list. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
@@ -271,7 +271,7 @@ Nice! I've marked this task as done: 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 Noted. I've removed this task: 🐷
-  [D][X] return book (by: June 6th) 🐷
+  [D][X] return book (by: Jun 06 2026) 🐷
 Now you have 2 tasks in the list. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷

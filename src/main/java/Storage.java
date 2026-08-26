@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,39 +59,43 @@ public class Storage {
      * Recreates a task from one stored line, or returns {@code null} for a corrupted line.
      */
     private Task parseTask(String line) {
-        String[] parts = line.split(" \\| ", -1);
-        if (parts.length < 3) {
-            return null;
-        }
-        Task task;
-        switch (parts[0]) {
-        case "T":
-            if (parts.length != 3) {
+        try {
+            String[] parts = line.split(" \\| ", -1);
+            if (parts.length < 3) {
                 return null;
             }
-            task = new Todo(parts[2]);
-            break;
-        case "D":
-            if (parts.length != 4) {
+            Task task;
+            switch (parts[0]) {
+            case "T":
+                if (parts.length != 3) {
+                    return null;
+                }
+                task = new Todo(parts[2]);
+                break;
+            case "D":
+                if (parts.length != 4) {
+                    return null;
+                }
+                task = new Deadline(parts[2], LocalDate.parse(parts[3]));
+                break;
+            case "E":
+                if (parts.length != 5) {
+                    return null;
+                }
+                task = new Event(parts[2], parts[3], parts[4]);
+                break;
+            default:
                 return null;
             }
-            task = new Deadline(parts[2], parts[3]);
-            break;
-        case "E":
-            if (parts.length != 5) {
+            if (parts[1].equals("1")) {
+                task.markAsDone();
+            } else if (!parts[1].equals("0")) {
                 return null;
             }
-            task = new Event(parts[2], parts[3], parts[4]);
-            break;
-        default:
+            return task;
+        } catch (RuntimeException exception) {
             return null;
         }
-        if (parts[1].equals("1")) {
-            task.markAsDone();
-        } else if (!parts[1].equals("0")) {
-            return null;
-        }
-        return task;
     }
 
     /**
