@@ -9,7 +9,16 @@ import java.util.List;
  * Saves the task list to, and loads it from, a file relative to the project directory.
  */
 public class Storage {
-    private static final Path DATA_FILE = Path.of("data", "duke.txt");
+    private final Path dataFile;
+
+    /**
+     * Creates a Storage that reads from and writes to the given file path.
+     *
+     * @param filePath path of the file used to persist tasks
+     */
+    public Storage(String filePath) {
+        this.dataFile = Path.of(filePath);
+    }
 
     /**
      * Loads stored tasks, returning an empty list when the application is run for the first time.
@@ -20,11 +29,11 @@ public class Storage {
      */
     public List<Task> load() throws TBladeException {
         List<Task> tasks = new ArrayList<>();
-        if (Files.notExists(DATA_FILE)) {
+        if (Files.notExists(dataFile)) {
             return tasks;
         }
         try {
-            for (String line : Files.readAllLines(DATA_FILE)) {
+            for (String line : Files.readAllLines(dataFile)) {
                 Task task = parseTask(line);
                 if (task != null) {
                     tasks.add(task);
@@ -48,8 +57,8 @@ public class Storage {
             lines.add(formatTask(task));
         }
         try {
-            Files.createDirectories(DATA_FILE.getParent());
-            Files.write(DATA_FILE, lines);
+            Files.createDirectories(dataFile.getParent());
+            Files.write(dataFile, lines);
         } catch (IOException exception) {
             throw new TBladeException("I could not save your tasks: " + exception.getMessage());
         }
