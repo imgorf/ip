@@ -30,7 +30,7 @@ def load_cases(plan_path: Path) -> list[dict[str, str]]:
 
 def compile_program(classes_directory: Path) -> None:
     """Compile every Java source file using the configured Java 25 compiler."""
-    sources = sorted((PROJECT_ROOT / "src" / "main" / "java").glob("*.java"))
+    sources = sorted((PROJECT_ROOT / "src" / "main" / "java").glob("**/*.java"))
     result = subprocess.run(
         ["javac", "-d", str(classes_directory), *map(str, sources)],
         text=True,
@@ -67,7 +67,7 @@ def main() -> None:
         for case in cases:
             with tempfile.TemporaryDirectory(prefix="tblade-ui-session-") as session_directory:
                 result = subprocess.run(
-                    ["java", "-cp", str(classes_directory), "TBlade"],
+                    ["java", "-cp", str(classes_directory), "tblade.TBlade"],
                     input=case["inputs"] + "\n",
                     text=True,
                     capture_output=True,

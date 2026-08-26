@@ -1,3 +1,5 @@
+package tblade.task;
+
 /**
  * Represents one task in the task list and whether it has been completed.
  */

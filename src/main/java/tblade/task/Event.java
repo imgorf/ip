@@ -1,3 +1,5 @@
+package tblade.task;
+
 /**
  * Represents a task that starts and ends at specified times.
  */

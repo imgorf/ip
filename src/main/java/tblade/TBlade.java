@@ -1,5 +1,17 @@
+package tblade;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import tblade.exception.TBladeException;
+import tblade.parser.Parser;
+import tblade.storage.Storage;
+import tblade.task.Deadline;
+import tblade.task.Event;
+import tblade.task.Task;
+import tblade.task.TaskList;
+import tblade.task.Todo;
+import tblade.ui.Ui;
 
 /**
  * Runs the TBlade command-line application, coordinating the Ui, Storage, and TaskList.
