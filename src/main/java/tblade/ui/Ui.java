@@ -82,6 +82,18 @@ public class Ui {
     }
 
     /**
+     * Displays the tasks matching a search, numbered from 1.
+     *
+     * @param matches the matching tasks to display
+     */
+    public void showMatchingTasks(TaskList matches) {
+        printLine("Here are the matching tasks in your list:");
+        for (int i = 0; i < matches.size(); i++) {
+            printLine((i + 1) + "." + matches.get(i));
+        }
+    }
+
+    /**
      * Displays the confirmation shown after a task is added.
      *
      * @param task the task that was added

@@ -67,4 +67,17 @@ public class UiTest {
                         + "2.[T][ ] second task 🐷\n",
                 capturedOutput.toString());
     }
+
+    @Test
+    public void showMatchingTasks_printsEachMatchNumberedFromOne() throws TBladeException {
+        TaskList matches = new TaskList();
+        matches.add(new Todo("read book"));
+
+        ui.showMatchingTasks(matches);
+
+        assertEquals(
+                "Here are the matching tasks in your list: 🐷\n"
+                        + "1.[T][ ] read book 🐷\n",
+                capturedOutput.toString());
+    }
 }

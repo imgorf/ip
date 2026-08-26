@@ -33,6 +33,20 @@ public class ParserTest {
         assertThrows(TBladeException.class, () -> Parser.getTodoDescription("todo    "));
     }
 
+    // getFindKeyword
+
+    @Test
+    public void getFindKeyword_validCommand_returnsTrimmedKeyword() throws TBladeException {
+        assertEquals("book", Parser.getFindKeyword("find   book  "));
+    }
+
+    @Test
+    public void getFindKeyword_noKeyword_throwsTBladeException() {
+        TBladeException exception = assertThrows(TBladeException.class, () -> Parser.getFindKeyword("find"));
+
+        assertEquals("The search keyword cannot be empty. Use: find KEYWORD", exception.getMessage());
+    }
+
     // parseDeadlineArgs
 
     @Test
