@@ -84,7 +84,7 @@ Got it. I've added this task: 🐷
 Now you have 1 tasks in the list. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
-OOPS!!! I don't know that command. Use: todo, deadline, event, list, mark, unmark, delete, or bye. 🐷
+OOPS!!! I don't know that command. Use: todo, deadline, event, list, find, mark, unmark, delete, or bye. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 OOPS!!! The description of a deadline cannot be empty. Use: deadline DESCRIPTION /by DATE 🐷
@@ -318,7 +318,7 @@ Hello! I'm TBlade. 🐷
 What can I do for you? 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
-OOPS!!! Please enter a command. Use: todo, deadline, event, list, mark, unmark, delete, or bye. 🐷
+OOPS!!! Please enter a command. Use: todo, deadline, event, list, find, mark, unmark, delete, or bye. 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 OOPS!!! The list command does not take extra text. Use: list 🐷
@@ -394,7 +394,77 @@ ____________________________________________________________ 🐷
 OOPS!!! The description of a todo cannot be empty. Use: todo DESCRIPTION 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
-OOPS!!! I don't know that command. Use: todo, deadline, event, list, mark, unmark, delete, or bye. 🐷
+OOPS!!! I don't know that command. Use: todo, deadline, event, list, find, mark, unmark, delete, or bye. 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Bye. Hope to see you again soon! 🐷
+____________________________________________________________ 🐷
+```
+
+## Test Case: Find tasks by keyword
+### Aim
+Verify that find lists only the tasks whose description contains the keyword, that a non-matching keyword returns an empty match list, and that an empty keyword is rejected.
+### Inputs
+```text
+todo read book
+deadline return book /by 2026-06-06
+event borrow laptop /from Mon /to Tue
+mark 1
+mark 2
+find book
+find laptop
+find zzz
+find
+bye
+```
+### Expected output
+```text
+____________________________________________________________ 🐷
+#####  ####   #       ###   ####   ##### 🐷
+  #    #   #  #      #   #  #   #  # 🐷
+  #    ####   #      #####  #   #  #### 🐷
+  #    #   #  #      #   #  #   #  # 🐷
+  #    ####   #####  #   #  ####   ##### 🐷
+Hello! I'm TBlade. 🐷
+What can I do for you? 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Got it. I've added this task: 🐷
+  [T][ ] read book 🐷
+Now you have 1 tasks in the list. 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Got it. I've added this task: 🐷
+  [D][ ] return book (by: Jun 06 2026) 🐷
+Now you have 2 tasks in the list. 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Got it. I've added this task: 🐷
+  [E][ ] borrow laptop (from: Mon to: Tue) 🐷
+Now you have 3 tasks in the list. 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Nice! I've marked this task as done: 🐷
+  [X] read book 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Nice! I've marked this task as done: 🐷
+  [X] return book 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Here are the matching tasks in your list: 🐷
+1.[T][X] read book 🐷
+2.[D][X] return book (by: Jun 06 2026) 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Here are the matching tasks in your list: 🐷
+1.[E][ ] borrow laptop (from: Mon to: Tue) 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+Here are the matching tasks in your list: 🐷
+____________________________________________________________ 🐷
+____________________________________________________________ 🐷
+OOPS!!! The search keyword cannot be empty. Use: find KEYWORD 🐷
 ____________________________________________________________ 🐷
 ____________________________________________________________ 🐷
 Bye. Hope to see you again soon! 🐷

@@ -67,7 +67,8 @@ public class TBlade {
      */
     private boolean executeCommand(String command) throws TBladeException {
         if (command.isBlank()) {
-            throw new TBladeException("Please enter a command. Use: todo, deadline, event, list, mark, unmark, delete, or bye.");
+            throw new TBladeException("Please enter a command. "
+                    + "Use: todo, deadline, event, list, find, mark, unmark, delete, or bye.");
         } else if (command.equals("bye")) {
             ui.showGoodbye();
             return false;
@@ -92,6 +93,9 @@ public class TBlade {
             Task removedTask = tasks.remove(taskIndex);
             storage.save(tasks.getAll());
             ui.showDeleted(removedTask, tasks.size());
+        } else if (command.equals("find") || command.startsWith("find ")) {
+            String keyword = Parser.getFindKeyword(command);
+            ui.showMatchingTasks(tasks.find(keyword));
         } else if (command.equals("todo") || command.startsWith("todo ")) {
             String description = Parser.getTodoDescription(command);
             tasks.add(new Todo(description));
@@ -108,7 +112,8 @@ public class TBlade {
             storage.save(tasks.getAll());
             ui.showAddedTask(tasks.get(tasks.size() - 1), tasks.size());
         } else {
-            throw new TBladeException("I don't know that command. Use: todo, deadline, event, list, mark, unmark, delete, or bye.");
+            throw new TBladeException("I don't know that command. "
+                    + "Use: todo, deadline, event, list, find, mark, unmark, delete, or bye.");
         }
         return true;
     }

@@ -62,4 +62,28 @@ public class TaskListTest {
         assertEquals(1, tasks.size());
         assertSame(existing, tasks.getAll());
     }
+
+    @Test
+    public void find_matchingKeyword_returnsOnlyMatchingTasksInOrder() throws TBladeException {
+        TaskList tasks = new TaskList();
+        tasks.add(new Todo("read book"));
+        tasks.add(new Todo("return laptop"));
+        tasks.add(new Todo("return book"));
+
+        TaskList matches = tasks.find("book");
+
+        assertEquals(2, matches.size());
+        assertEquals("read book", matches.get(0).getDescription());
+        assertEquals("return book", matches.get(1).getDescription());
+    }
+
+    @Test
+    public void find_noMatch_returnsEmptyTaskList() throws TBladeException {
+        TaskList tasks = new TaskList();
+        tasks.add(new Todo("read book"));
+
+        TaskList matches = tasks.find("laptop");
+
+        assertEquals(0, matches.size());
+    }
 }

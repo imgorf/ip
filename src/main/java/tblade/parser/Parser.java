@@ -41,6 +41,21 @@ public class Parser {
     }
 
     /**
+     * Extracts and validates the search keyword of a {@code find} command.
+     *
+     * @param command full command entered by the user
+     * @return the search keyword
+     * @throws TBladeException if the keyword is empty
+     */
+    public static String getFindKeyword(String command) throws TBladeException {
+        String keyword = command.substring(4).trim();
+        if (keyword.isEmpty()) {
+            throw new TBladeException("The search keyword cannot be empty. Use: find KEYWORD");
+        }
+        return keyword;
+    }
+
+    /**
      * Extracts and validates the description and {@code /by} date of a {@code deadline} command.
      *
      * @param command full command entered by the user
