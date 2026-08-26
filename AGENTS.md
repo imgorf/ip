@@ -28,11 +28,16 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## Java coding standard
+
+All Java code in this project (new or edited) must follow the project-specific `seedu-java-coding-standard` skill, which is based on the [SE-EDU intermediate Java coding standard](https://se-education.org/guides/conventions/java/intermediate.html). This applies to naming, layout, brace/whitespace style, import order, and Javadoc format — not just to code written for a specific increment.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
+
+All commits in this project must follow the project-specific `seedu-git-standard` skill, which is based on the [SE-EDU git conventions guide](https://se-education.org/guides/conventions/git.html) (commit subject/body format, branch naming). When proposing or creating a commit message, include enough detail to explain the rationale for the change, per that skill's guidance on commit body content.
 
 ## UI regression testing
 

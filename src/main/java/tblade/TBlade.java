@@ -67,7 +67,8 @@ public class TBlade {
      */
     private boolean executeCommand(String command) throws TBladeException {
         if (command.isBlank()) {
-            throw new TBladeException("Please enter a command. Use: todo, deadline, event, list, mark, unmark, delete, or bye.");
+            throw new TBladeException("Please enter a command. "
+                    + "Use: todo, deadline, event, list, mark, unmark, delete, or bye.");
         } else if (command.equals("bye")) {
             ui.showGoodbye();
             return false;
@@ -108,7 +109,8 @@ public class TBlade {
             storage.save(tasks.getAll());
             ui.showAddedTask(tasks.get(tasks.size() - 1), tasks.size());
         } else {
-            throw new TBladeException("I don't know that command. Use: todo, deadline, event, list, mark, unmark, delete, or bye.");
+            throw new TBladeException("I don't know that command. "
+                    + "Use: todo, deadline, event, list, mark, unmark, delete, or bye.");
         }
         return true;
     }
