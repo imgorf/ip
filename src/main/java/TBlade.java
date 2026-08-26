@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 /**
  * Runs the TBlade command-line application.
@@ -103,7 +105,8 @@ public class TBlade {
                                 + "Use: deadline DESCRIPTION /by DATE");
                     }
                     checkTaskListHasSpace(tasks.size());
-                    tasks.add(new Deadline(description, by));
+                    LocalDate deadlineDate = parseDeadlineDate(by);
+                    tasks.add(new Deadline(description, deadlineDate));
                     storage.save(tasks);
                     printAddedTask(tasks.get(tasks.size() - 1), tasks.size());
                 } else if (command.equals("event") || command.startsWith("event ")) {
@@ -192,6 +195,21 @@ public class TBlade {
         if (taskCount >= MAX_TASKS) {
             throw new TBladeException("The task list already has " + MAX_TASKS + " tasks. "
                     + "You cannot add another task in this version.");
+        }
+    }
+
+    /**
+     * Parses an ISO-8601 deadline date supplied with the {@code /by} argument.
+     *
+     * @param dateText date entered by the user
+     * @return the parsed deadline date
+     * @throws TBladeException if the date is not in {@code yyyy-MM-dd} format
+     */
+    private static LocalDate parseDeadlineDate(String dateText) throws TBladeException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException exception) {
+            throw new TBladeException("The /by date must use yyyy-MM-dd. Use: deadline DESCRIPTION /by yyyy-MM-dd");
         }
     }
 
