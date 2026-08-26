@@ -1,3 +1,5 @@
+package tblade.task;
+
 /**
  * Identifies the supported kinds of tasks and their list-display icons.
  */

@@ -1,5 +1,9 @@
+package tblade.task;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import tblade.exception.TBladeException;
 
 /**
  * Holds the tasks currently known to the application and the operations that add to,

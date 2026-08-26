@@ -1,4 +1,9 @@
+package tblade.ui;
+
 import java.util.Scanner;
+
+import tblade.task.Task;
+import tblade.task.TaskList;
 
 /**
  * Deals with all interactions with the user: reading commands and printing output.

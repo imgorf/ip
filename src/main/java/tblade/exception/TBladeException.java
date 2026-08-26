@@ -1,3 +1,5 @@
+package tblade.exception;
+
 /**
  * Represents an error caused by an invalid command entered into TBlade.
  */
