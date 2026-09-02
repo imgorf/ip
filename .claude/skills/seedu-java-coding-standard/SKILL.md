@@ -36,14 +36,11 @@ This project follows the [SE-EDU intermediate Java coding standard](https://se-e
 
 - Every class lives in a package (no default package).
 - **No wildcard imports** — import each class explicitly.
-- **Import order**, blank line between each group, alphabetical within a group:
+- **Import order** (matches `config/checkstyle/checkstyle.xml`'s `CustomImportOrder`), blank line between each group, alphabetical within a group:
   1. static imports
-  2. `java.*`
-  3. `javax.*`
-  4. third-party `org.*`
-  5. third-party `com.*`
-  6. `javafx.*` / other UI packages
-  7. project-specific packages (`tblade.*`)
+  2. `java.*` / `javax.*`
+  3. third-party `org.*`
+  4. everything else — third-party `com.*`, `javafx.*`, and this project's own `tblade.*` packages all share this one catch-all group (no blank line between them)
 - Array specifiers attach to the type, not the variable: `String[] args`, not `String args[]`.
 - Initialize variables where declared; declare in the smallest scope that works.
 - Class fields are never `public` unless the class is a pure data holder with no behavior (a `record` component is fine — it's not a raw public field).

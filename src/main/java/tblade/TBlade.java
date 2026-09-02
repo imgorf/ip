@@ -14,12 +14,21 @@ import tblade.task.Todo;
 import tblade.ui.Ui;
 
 /**
- * Runs the TBlade command-line application, coordinating the Ui, Storage, and TaskList.
+ * Runs the TBlade application, coordinating the Ui, Storage, and TaskList. Supports both the
+ * console UI ({@link #run()}) and a GUI ({@link #getResponse(String)}) built on the same command
+ * logic, so both surfaces produce identical responses.
  */
 public class TBlade {
+    /**
+     * The text response to a command, and whether the application should keep running afterward.
+     */
+    private record CommandResult(String message, boolean isRunning) {
+    }
+
     private final Storage storage;
     private final Ui ui;
     private TaskList tasks;
+    private boolean isRunning = true;
 
     /**
      * Creates a TBlade that persists its tasks to the given file path, loading any tasks
@@ -34,7 +43,7 @@ public class TBlade {
         try {
             loadedTasks = storage.load();
         } catch (TBladeException exception) {
-            ui.showError(exception.getMessage());
+            ui.showMessage(ui.formatError(exception.getMessage()));
             loadedTasks = new ArrayList<>();
         }
         tasks = new TaskList(loadedTasks);
@@ -45,16 +54,46 @@ public class TBlade {
      */
     public void run() {
         ui.showWelcome();
-        boolean isRunning = true;
         while (isRunning) {
             String command = ui.readCommand();
             ui.showLine();
-            try {
-                isRunning = executeCommand(command);
-            } catch (TBladeException exception) {
-                ui.showError(exception.getMessage());
-            }
+            ui.showMessage(processCommand(command));
             ui.showLine();
+        }
+    }
+
+    /**
+     * Processes one line of user input and returns TBlade's reply, for use by a GUI.
+     *
+     * @param input full command entered by the user
+     * @return the text TBlade responds with
+     */
+    public String getResponse(String input) {
+        return processCommand(input);
+    }
+
+    /**
+     * Returns whether the application should keep accepting commands.
+     *
+     * @return {@code false} once {@code bye} has been processed, {@code true} otherwise
+     */
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    /**
+     * Interprets and carries out a single command, updating {@link #isRunning}.
+     *
+     * @param command full command entered by the user
+     * @return the text response to the command, including any error message
+     */
+    private String processCommand(String command) {
+        try {
+            CommandResult result = executeCommand(command);
+            isRunning = result.isRunning();
+            return result.message();
+        } catch (TBladeException exception) {
+            return ui.formatError(exception.getMessage());
         }
     }
 
@@ -62,64 +101,62 @@ public class TBlade {
      * Interprets and carries out a single command.
      *
      * @param command full command entered by the user
-     * @return {@code false} if the command was {@code bye}, {@code true} otherwise
+     * @return the response text and whether the application should keep running
      * @throws TBladeException if the command is invalid
      */
-    private boolean executeCommand(String command) throws TBladeException {
+    private CommandResult executeCommand(String command) throws TBladeException {
         if (command.isBlank()) {
             throw new TBladeException("Please enter a command. "
                     + "Use: todo, deadline, event, list, find, mark, unmark, delete, or bye.");
         } else if (command.equals("bye")) {
-            ui.showGoodbye();
-            return false;
+            return new CommandResult(ui.formatGoodbye(), false);
         } else if (command.startsWith("bye ")) {
             throw new TBladeException("The bye command does not take extra text. Use: bye");
         } else if (command.equals("list")) {
-            ui.showTaskList(tasks);
+            return new CommandResult(ui.formatTaskList(tasks), true);
         } else if (command.startsWith("list ")) {
             throw new TBladeException("The list command does not take extra text. Use: list");
         } else if (command.equals("mark") || command.startsWith("mark ")) {
             int taskIndex = Parser.parseTaskIndex(command, "mark", tasks.size());
             tasks.get(taskIndex).markAsDone();
             storage.save(tasks.getAll());
-            ui.showMarked(tasks.get(taskIndex));
+            return new CommandResult(ui.formatMarked(tasks.get(taskIndex)), true);
         } else if (command.equals("unmark") || command.startsWith("unmark ")) {
             int taskIndex = Parser.parseTaskIndex(command, "unmark", tasks.size());
             tasks.get(taskIndex).unmarkAsDone();
             storage.save(tasks.getAll());
-            ui.showUnmarked(tasks.get(taskIndex));
+            return new CommandResult(ui.formatUnmarked(tasks.get(taskIndex)), true);
         } else if (command.equals("delete") || command.startsWith("delete ")) {
             int taskIndex = Parser.parseTaskIndex(command, "delete", tasks.size());
             Task removedTask = tasks.remove(taskIndex);
             storage.save(tasks.getAll());
-            ui.showDeleted(removedTask, tasks.size());
+            return new CommandResult(ui.formatDeleted(removedTask, tasks.size()), true);
         } else if (command.equals("find") || command.startsWith("find ")) {
             String keyword = Parser.getFindKeyword(command);
-            ui.showMatchingTasks(tasks.find(keyword));
+            return new CommandResult(ui.formatMatchingTasks(tasks.find(keyword)), true);
         } else if (command.equals("todo") || command.startsWith("todo ")) {
             String description = Parser.getTodoDescription(command);
             tasks.add(new Todo(description));
             storage.save(tasks.getAll());
-            ui.showAddedTask(tasks.get(tasks.size() - 1), tasks.size());
+            return new CommandResult(ui.formatAddedTask(tasks.get(tasks.size() - 1), tasks.size()), true);
         } else if (command.equals("deadline") || command.startsWith("deadline ")) {
             Parser.DeadlineArgs args = Parser.parseDeadlineArgs(command);
             tasks.add(new Deadline(args.description(), args.by()));
             storage.save(tasks.getAll());
-            ui.showAddedTask(tasks.get(tasks.size() - 1), tasks.size());
+            return new CommandResult(ui.formatAddedTask(tasks.get(tasks.size() - 1), tasks.size()), true);
         } else if (command.equals("event") || command.startsWith("event ")) {
             Parser.EventArgs args = Parser.parseEventArgs(command);
             tasks.add(new Event(args.description(), args.from(), args.to()));
             storage.save(tasks.getAll());
-            ui.showAddedTask(tasks.get(tasks.size() - 1), tasks.size());
+            return new CommandResult(ui.formatAddedTask(tasks.get(tasks.size() - 1), tasks.size()), true);
         } else {
             throw new TBladeException("I don't know that command. "
                     + "Use: todo, deadline, event, list, find, mark, unmark, delete, or bye.");
         }
-        return true;
     }
 
     /**
-     * Starts the TBlade application, persisting tasks to {@code data/duke.txt}.
+     * Starts the TBlade console application, persisting tasks to {@code data/duke.txt}.
      *
      * @param args command-line arguments, which are not used by this application
      */
