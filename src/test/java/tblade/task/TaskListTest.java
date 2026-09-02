@@ -40,10 +40,17 @@ public class TaskListTest {
     }
 
     @Test
-    public void remove_existingIndex_returnsAndDeletesTask() throws TBladeException {
-        TaskList tasks = new TaskList();
-        tasks.add(new Todo("first"));
-        tasks.add(new Todo("second"));
+    public void of_multipleTasks_containsThemInOrder() {
+        TaskList tasks = TaskList.of(new Todo("first"), new Todo("second"));
+
+        assertEquals(2, tasks.size());
+        assertEquals("first", tasks.get(0).getDescription());
+        assertEquals("second", tasks.get(1).getDescription());
+    }
+
+    @Test
+    public void remove_existingIndex_returnsAndDeletesTask() {
+        TaskList tasks = TaskList.of(new Todo("first"), new Todo("second"));
 
         Task removed = tasks.remove(0);
 
@@ -64,11 +71,8 @@ public class TaskListTest {
     }
 
     @Test
-    public void find_matchingKeyword_returnsOnlyMatchingTasksInOrder() throws TBladeException {
-        TaskList tasks = new TaskList();
-        tasks.add(new Todo("read book"));
-        tasks.add(new Todo("return laptop"));
-        tasks.add(new Todo("return book"));
+    public void find_matchingKeyword_returnsOnlyMatchingTasksInOrder() {
+        TaskList tasks = TaskList.of(new Todo("read book"), new Todo("return laptop"), new Todo("return book"));
 
         TaskList matches = tasks.find("book");
 
@@ -78,9 +82,8 @@ public class TaskListTest {
     }
 
     @Test
-    public void find_noMatch_returnsEmptyTaskList() throws TBladeException {
-        TaskList tasks = new TaskList();
-        tasks.add(new Todo("read book"));
+    public void find_noMatch_returnsEmptyTaskList() {
+        TaskList tasks = TaskList.of(new Todo("read book"));
 
         TaskList matches = tasks.find("laptop");
 
