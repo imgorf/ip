@@ -6,7 +6,9 @@ import tblade.task.Task;
 import tblade.task.TaskList;
 
 /**
- * Deals with all interactions with the user: reading commands and printing output.
+ * Deals with all interactions with the user. Response text is built by the {@code formatX}
+ * methods, which are pure (no I/O) so that both the console UI and the GUI can share the exact
+ * same wording; {@code showX} methods print that text to the console.
  */
 public class Ui {
     private static final String PIG = " 🐷";
@@ -54,87 +56,110 @@ public class Ui {
     }
 
     /**
-     * Displays an error message to the user.
+     * Prints a response, one console line per line of the given text.
+     *
+     * @param message text to display, built by one of the {@code formatX} methods
+     */
+    public void showMessage(String message) {
+        message.lines().forEach(this::printLine);
+    }
+
+    /**
+     * Builds the text shown for an error.
      *
      * @param message explanation of what went wrong and how to correct it
+     * @return the formatted error text
      */
-    public void showError(String message) {
-        printLine("OOPS!!! " + message);
+    public String formatError(String message) {
+        return "OOPS!!! " + message;
     }
 
     /**
-     * Displays the farewell message shown when the user exits.
+     * Builds the farewell text shown when the user exits.
+     *
+     * @return the formatted farewell text
      */
-    public void showGoodbye() {
-        printLine("Bye. Hope to see you again soon!");
+    public String formatGoodbye() {
+        return "Bye. Hope to see you again soon!";
     }
 
     /**
-     * Displays every task currently in the list, numbered from 1.
+     * Builds the text listing every task currently in the list, numbered from 1.
      *
      * @param tasks the tasks to display
+     * @return the formatted task list text
      */
-    public void showTaskList(TaskList tasks) {
-        printLine("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            printLine((i + 1) + "." + tasks.get(i));
-        }
+    public String formatTaskList(TaskList tasks) {
+        return formatNumberedTasks("Here are the tasks in your list:", tasks);
     }
 
     /**
-     * Displays the tasks matching a search, numbered from 1.
+     * Builds the text listing the tasks matching a search, numbered from 1.
      *
      * @param matches the matching tasks to display
+     * @return the formatted matching-tasks text
      */
-    public void showMatchingTasks(TaskList matches) {
-        printLine("Here are the matching tasks in your list:");
-        for (int i = 0; i < matches.size(); i++) {
-            printLine((i + 1) + "." + matches.get(i));
-        }
+    public String formatMatchingTasks(TaskList matches) {
+        return formatNumberedTasks("Here are the matching tasks in your list:", matches);
     }
 
     /**
-     * Displays the confirmation shown after a task is added.
+     * Builds the confirmation text shown after a task is added.
      *
      * @param task the task that was added
      * @param taskCount number of tasks now in the list
+     * @return the formatted confirmation text
      */
-    public void showAddedTask(Task task, int taskCount) {
-        printLine("Got it. I've added this task:");
-        printLine("  " + task);
-        printLine("Now you have " + taskCount + " tasks in the list.");
+    public String formatAddedTask(Task task, int taskCount) {
+        return "Got it. I've added this task:\n"
+                + "  " + task + "\n"
+                + "Now you have " + taskCount + " tasks in the list.";
     }
 
     /**
-     * Displays the confirmation shown after a task is marked as done.
+     * Builds the confirmation text shown after a task is marked as done.
      *
      * @param task the task that was marked
+     * @return the formatted confirmation text
      */
-    public void showMarked(Task task) {
-        printLine("Nice! I've marked this task as done:");
-        printLine("  [X] " + task.getDescription());
+    public String formatMarked(Task task) {
+        return "Nice! I've marked this task as done:\n"
+                + "  [X] " + task.getDescription();
     }
 
     /**
-     * Displays the confirmation shown after a task is marked as not done.
+     * Builds the confirmation text shown after a task is marked as not done.
      *
      * @param task the task that was unmarked
+     * @return the formatted confirmation text
      */
-    public void showUnmarked(Task task) {
-        printLine("OK, I've marked this task as not done yet:");
-        printLine("  [ ] " + task.getDescription());
+    public String formatUnmarked(Task task) {
+        return "OK, I've marked this task as not done yet:\n"
+                + "  [ ] " + task.getDescription();
     }
 
     /**
-     * Displays the confirmation shown after a task is deleted.
+     * Builds the confirmation text shown after a task is deleted.
      *
      * @param task the task that was removed
      * @param taskCount number of tasks remaining in the list
+     * @return the formatted confirmation text
      */
-    public void showDeleted(Task task, int taskCount) {
-        printLine("Noted. I've removed this task:");
-        printLine("  " + task);
-        printLine("Now you have " + taskCount + " tasks in the list.");
+    public String formatDeleted(Task task, int taskCount) {
+        return "Noted. I've removed this task:\n"
+                + "  " + task + "\n"
+                + "Now you have " + taskCount + " tasks in the list.";
+    }
+
+    /**
+     * Builds the text listing a task list under the given header, numbered from 1.
+     */
+    private String formatNumberedTasks(String header, TaskList tasks) {
+        StringBuilder text = new StringBuilder(header);
+        for (int i = 0; i < tasks.size(); i++) {
+            text.append('\n').append(i + 1).append('.').append(tasks.get(i));
+        }
+        return text.toString();
     }
 
     /**
