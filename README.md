@@ -32,3 +32,14 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
 1. Run the command `java -jar "tblade.jar"`.
 
 Tasks are saved to a `data` folder created next to the JAR file, so they persist between runs.
+
+## Developer setup
+
+**Checkstyle** enforces the project's [Java coding standard](https://se-education.org/guides/conventions/java/intermediate.html).
+
+- Run it manually with `./gradlew checkstyleMain checkstyleTest`, or `./gradlew check` (also runs the tests), or `./gradlew build` (also builds the jar) — all three run Checkstyle automatically.
+- To have it run automatically before every commit (blocking the commit if there are violations), run this once per clone:
+  ```
+  git config core.hooksPath .githooks
+  ```
+  This points git at the [`.githooks/pre-commit`](.githooks/pre-commit) script tracked in this repo. It's a local git setting, not something git can pick up on its own from a fresh clone, so each clone needs to run the command once. To skip the check for one commit, use `git commit --no-verify`.

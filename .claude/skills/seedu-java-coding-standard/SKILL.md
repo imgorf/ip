@@ -28,7 +28,7 @@ This project follows the [SE-EDU intermediate Java coding standard](https://se-e
 - **K&R (Egyptian) braces**: opening brace on the same line as the statement.
 - **Braces are mandatory** on every `if`/`else`/`for`/`while`/`do-while` body, even single-statement ones. Put the condition and body on separate lines — never `if (x) doThing();` on one line.
 - `} else if (...) {` / `} else {` on one line (closing brace, `else`, opening brace together).
-- `switch`: every case must end in `break;`/`return`/`throw`, or an explicit `// Fallthrough` comment.
+- `switch`: every case must end in `break;`/`return`/`throw`, or an explicit `// Fallthrough` comment. `case` labels are indented one level (4 spaces) in from `switch`, and each case's body is indented one further level from `case` — not aligned flush with `switch`.
 - Whitespace: space around binary operators, space after Java keywords (`while (`, `if (`), space after commas, space after `;` in a `for` header.
 - One blank line between logical units inside a block.
 
@@ -71,3 +71,4 @@ This project follows the [SE-EDU intermediate Java coding standard](https://se-e
 
 - When **writing new code**: follow every rule above as you write, don't fix it up afterward.
 - When **reviewing/auditing existing code**: check naming, line length (`awk 'length > 120'`), brace style, import order/wildcards, and Javadoc presence/format; fix violations, and leave already-compliant code untouched.
+- Checkstyle (`config/checkstyle/checkstyle.xml`) mechanically enforces the objectively-checkable subset of this standard and runs automatically on `./gradlew check`/`build` and via the pre-commit hook (see README.md). Run `./gradlew checkstyleMain checkstyleTest` after editing Java code to catch anything a manual read misses (e.g. exact indentation depth, line-wrap placement) — it's a backstop, not a replacement for applying the rules above while writing.

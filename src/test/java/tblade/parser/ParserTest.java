@@ -59,8 +59,8 @@ public class ParserTest {
 
     @Test
     public void parseDeadlineArgs_missingDescription_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseDeadlineArgs("deadline /by 2026-03-15"));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseDeadlineArgs("deadline /by 2026-03-15"));
 
         assertEquals("The description of a deadline cannot be empty. Use: deadline DESCRIPTION /by DATE",
                 exception.getMessage());
@@ -68,24 +68,24 @@ public class ParserTest {
 
     @Test
     public void parseDeadlineArgs_missingByKeyword_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseDeadlineArgs("deadline return book"));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseDeadlineArgs("deadline return book"));
 
         assertEquals("A deadline needs a /by date. Use: deadline DESCRIPTION /by DATE", exception.getMessage());
     }
 
     @Test
     public void parseDeadlineArgs_emptyDate_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseDeadlineArgs("deadline return book /by   "));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseDeadlineArgs("deadline return book /by   "));
 
         assertEquals("The /by date cannot be empty. Use: deadline DESCRIPTION /by DATE", exception.getMessage());
     }
 
     @Test
     public void parseDeadlineArgs_dateNotIsoFormat_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseDeadlineArgs("deadline return book /by Sunday"));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseDeadlineArgs("deadline return book /by Sunday"));
 
         assertEquals("The /by date must use yyyy-MM-dd. Use: deadline DESCRIPTION /by yyyy-MM-dd",
                 exception.getMessage());
@@ -104,8 +104,8 @@ public class ParserTest {
 
     @Test
     public void parseEventArgs_missingDescription_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseEventArgs("event /from Mon /to Tue"));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseEventArgs("event /from Mon /to Tue"));
 
         assertEquals("The description of an event cannot be empty. Use: event DESCRIPTION /from START /to END",
                 exception.getMessage());
@@ -113,8 +113,8 @@ public class ParserTest {
 
     @Test
     public void parseEventArgs_missingFromKeyword_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseEventArgs("event workshop /to Tue"));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseEventArgs("event workshop /to Tue"));
 
         assertEquals("An event needs a /from start time. Use: event DESCRIPTION /from START /to END",
                 exception.getMessage());
@@ -122,8 +122,8 @@ public class ParserTest {
 
     @Test
     public void parseEventArgs_missingToKeyword_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseEventArgs("event workshop /from Mon"));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseEventArgs("event workshop /from Mon"));
 
         assertEquals("An event needs a /to end time. Use: event DESCRIPTION /from START /to END",
                 exception.getMessage());
@@ -131,8 +131,8 @@ public class ParserTest {
 
     @Test
     public void parseEventArgs_emptyToTime_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseEventArgs("event workshop /from Mon /to   "));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseEventArgs("event workshop /from Mon /to   "));
 
         assertEquals("The /to end time cannot be empty. Use: event DESCRIPTION /from START /to END",
                 exception.getMessage());
@@ -147,32 +147,32 @@ public class ParserTest {
 
     @Test
     public void parseTaskIndex_noNumberProvided_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseTaskIndex("mark", "mark", 3));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseTaskIndex("mark", "mark", 3));
 
         assertEquals("Please provide a task number. Use: mark TASK_NUMBER", exception.getMessage());
     }
 
     @Test
     public void parseTaskIndex_emptyList_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseTaskIndex("mark 1", "mark", 0));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseTaskIndex("mark 1", "mark", 0));
 
         assertEquals("There are no tasks to mark. Add a task first.", exception.getMessage());
     }
 
     @Test
     public void parseTaskIndex_numberOutOfRange_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseTaskIndex("mark 5", "mark", 3));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseTaskIndex("mark 5", "mark", 3));
 
         assertEquals("Task number must be between 1 and 3. Use: mark TASK_NUMBER", exception.getMessage());
     }
 
     @Test
     public void parseTaskIndex_notANumber_throwsTBladeException() {
-        TBladeException exception = assertThrows(TBladeException.class,
-                () -> Parser.parseTaskIndex("mark abc", "mark", 3));
+        TBladeException exception = assertThrows(TBladeException.class, () ->
+                Parser.parseTaskIndex("mark abc", "mark", 3));
 
         assertEquals("Task number must be a whole number. Use: mark TASK_NUMBER", exception.getMessage());
     }

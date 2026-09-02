@@ -83,26 +83,26 @@ public class Storage {
             }
             Task task;
             switch (parts[0]) {
-            case "T":
-                if (parts.length != 3) {
+                case "T":
+                    if (parts.length != 3) {
+                        return null;
+                    }
+                    task = new Todo(parts[2]);
+                    break;
+                case "D":
+                    if (parts.length != 4) {
+                        return null;
+                    }
+                    task = new Deadline(parts[2], LocalDate.parse(parts[3]));
+                    break;
+                case "E":
+                    if (parts.length != 5) {
+                        return null;
+                    }
+                    task = new Event(parts[2], parts[3], parts[4]);
+                    break;
+                default:
                     return null;
-                }
-                task = new Todo(parts[2]);
-                break;
-            case "D":
-                if (parts.length != 4) {
-                    return null;
-                }
-                task = new Deadline(parts[2], LocalDate.parse(parts[3]));
-                break;
-            case "E":
-                if (parts.length != 5) {
-                    return null;
-                }
-                task = new Event(parts[2], parts[3], parts[4]);
-                break;
-            default:
-                return null;
             }
             if (parts[1].equals("1")) {
                 task.markAsDone();
@@ -121,17 +121,17 @@ public class Storage {
     private String formatTask(Task task) {
         String status = task.isDone() ? "1" : "0";
         switch (task.getType()) {
-        case TODO:
-            return "T | " + status + " | " + task.getDescription();
-        case DEADLINE:
-            Deadline deadline = (Deadline) task;
-            return "D | " + status + " | " + task.getDescription() + " | " + deadline.getBy();
-        case EVENT:
-            Event event = (Event) task;
-            return "E | " + status + " | " + task.getDescription() + " | "
-                    + event.getFrom() + " | " + event.getTo();
-        default:
-            throw new IllegalStateException("Unsupported task type");
+            case TODO:
+                return "T | " + status + " | " + task.getDescription();
+            case DEADLINE:
+                Deadline deadline = (Deadline) task;
+                return "D | " + status + " | " + task.getDescription() + " | " + deadline.getBy();
+            case EVENT:
+                Event event = (Event) task;
+                return "E | " + status + " | " + task.getDescription() + " | "
+                        + event.getFrom() + " | " + event.getTo();
+            default:
+                throw new IllegalStateException("Unsupported task type");
         }
     }
 }
