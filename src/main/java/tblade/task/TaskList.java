@@ -1,6 +1,7 @@
 package tblade.task;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import tblade.exception.TBladeException;
@@ -28,6 +29,17 @@ public class TaskList {
      */
     public TaskList(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    /**
+     * Creates a task list containing exactly the given tasks, in order. A varargs convenience
+     * for building a small fixed list in one line, e.g. a test fixture.
+     *
+     * @param tasks tasks to include
+     * @return a new task list containing the given tasks
+     */
+    public static TaskList of(Task... tasks) {
+        return new TaskList(new ArrayList<>(Arrays.asList(tasks)));
     }
 
     /**

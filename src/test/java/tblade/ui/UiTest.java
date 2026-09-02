@@ -8,7 +8,6 @@ import java.io.PrintStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import tblade.exception.TBladeException;
 import tblade.task.TaskList;
 import tblade.task.Todo;
 
@@ -66,10 +65,8 @@ public class UiTest {
     }
 
     @Test
-    public void formatTaskList_listsEachTaskNumberedFromOne() throws TBladeException {
-        TaskList tasks = new TaskList();
-        tasks.add(new Todo("first task"));
-        tasks.add(new Todo("second task"));
+    public void formatTaskList_listsEachTaskNumberedFromOne() {
+        TaskList tasks = TaskList.of(new Todo("first task"), new Todo("second task"));
 
         assertEquals(
                 "Here are the tasks in your list:\n"
@@ -79,9 +76,8 @@ public class UiTest {
     }
 
     @Test
-    public void formatMatchingTasks_listsEachMatchNumberedFromOne() throws TBladeException {
-        TaskList matches = new TaskList();
-        matches.add(new Todo("read book"));
+    public void formatMatchingTasks_listsEachMatchNumberedFromOne() {
+        TaskList matches = TaskList.of(new Todo("read book"));
 
         assertEquals("Here are the matching tasks in your list:\n1.[T][ ] read book",
                 ui.formatMatchingTasks(matches));
