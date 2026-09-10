@@ -31,7 +31,9 @@ public class DialogBox extends HBox {
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            // dialog/displayPicture are @FXML-injected by load() above; without it they stay null
+            // and setText()/setImage() below would NPE anyway, so fail fast with a clear cause.
+            throw new RuntimeException("Failed to load DialogBox.fxml", e);
         }
 
         dialog.setText(text);

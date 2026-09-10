@@ -13,27 +13,22 @@ import tblade.TBlade;
  * A GUI for TBlade using FXML.
  */
 public class Main extends Application {
-    private static final String DATA_FILE_PATH = "data/duke.txt";
-
-    private final TBlade tblade = new TBlade(DATA_FILE_PATH);
+    private final TBlade tblade = new TBlade(TBlade.DEFAULT_DATA_FILE_PATH);
 
     /**
      * Loads MainWindow.fxml, injects the TBlade instance into its controller, and shows the stage.
      *
      * @param stage the primary stage provided by JavaFX
+     * @throws IOException if {@code MainWindow.fxml} cannot be loaded
      */
     @Override
-    public void start(Stage stage) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
-            AnchorPane ap = fxmlLoader.load();
-            Scene scene = new Scene(ap);
-            stage.setScene(scene);
-            stage.setTitle("TBlade");
-            fxmlLoader.<MainWindow>getController().setTblade(tblade);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void start(Stage stage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
+        AnchorPane ap = fxmlLoader.load();
+        Scene scene = new Scene(ap);
+        stage.setScene(scene);
+        stage.setTitle("TBlade");
+        fxmlLoader.<MainWindow>getController().setTblade(tblade);
+        stage.show();
     }
 }
