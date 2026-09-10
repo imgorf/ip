@@ -63,6 +63,9 @@ public class TaskList {
      * @return the removed task
      */
     public Task remove(int index) {
+        assert index >= 0 && index < tasks.size()
+                : "index " + index + " out of bounds for size " + tasks.size()
+                + ": callers must validate against size() first (e.g. via Parser.parseTaskIndex)";
         return tasks.remove(index);
     }
 
@@ -73,6 +76,9 @@ public class TaskList {
      * @return the task at that index
      */
     public Task get(int index) {
+        assert index >= 0 && index < tasks.size()
+                : "index " + index + " out of bounds for size " + tasks.size()
+                + ": callers must validate against size() first (e.g. via Parser.parseTaskIndex)";
         return tasks.get(index);
     }
 
