@@ -13,9 +13,7 @@ import tblade.TBlade;
  * A GUI for TBlade using FXML.
  */
 public class Main extends Application {
-    private static final String DATA_FILE_PATH = "data/duke.txt";
-
-    private final TBlade tblade = new TBlade(DATA_FILE_PATH);
+    private final TBlade tblade = new TBlade(TBlade.DEFAULT_DATA_FILE_PATH);
 
     /**
      * Loads MainWindow.fxml, injects the TBlade instance into its controller, and shows the stage.

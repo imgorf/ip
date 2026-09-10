@@ -20,6 +20,13 @@ import tblade.ui.Ui;
  */
 public class TBlade {
     /**
+     * The data file path used when the application isn't given another one, shared by the
+     * console entry point ({@link #main}) and the GUI entry point ({@code tblade.gui.Main}) so
+     * both surfaces persist to the same file.
+     */
+    public static final String DEFAULT_DATA_FILE_PATH = "data/duke.txt";
+
+    /**
      * The text response to a command, and whether the application should keep running afterward.
      */
     private record CommandResult(String message, boolean isRunning) {
@@ -165,11 +172,11 @@ public class TBlade {
     }
 
     /**
-     * Starts the TBlade console application, persisting tasks to {@code data/duke.txt}.
+     * Starts the TBlade console application, persisting tasks to {@link #DEFAULT_DATA_FILE_PATH}.
      *
      * @param args command-line arguments, which are not used by this application
      */
     public static void main(String[] args) {
-        new TBlade("data/duke.txt").run();
+        new TBlade(DEFAULT_DATA_FILE_PATH).run();
     }
 }
