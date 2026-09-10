@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,8 @@ import org.junit.jupiter.api.Test;
 import tblade.exception.TBladeException;
 
 /**
- * Tests TaskList's add/remove/get/size operations and its 100-task capacity limit.
+ * Tests TaskList's add/remove/get/size operations, its 100-task capacity limit, and its
+ * rejection of duplicate tasks.
  */
 public class TaskListTest {
     @Test
@@ -37,6 +39,28 @@ public class TaskListTest {
         assertEquals("The task list already has 100 tasks. You cannot add another task in this version.",
                 exception.getMessage());
         assertEquals(100, tasks.size());
+    }
+
+    @Test
+    public void add_duplicateTask_throwsTBladeException() throws TBladeException {
+        TaskList tasks = new TaskList();
+        tasks.add(new Todo("read book"));
+
+        TBladeException exception = assertThrows(TBladeException.class, () -> tasks.add(new Todo("read book")));
+
+        assertEquals("This task is already in your list: [T][ ] read book. "
+                + "Use `list` to see it, or give this one a different description.", exception.getMessage());
+        assertEquals(1, tasks.size());
+    }
+
+    @Test
+    public void add_sameDescriptionDifferentTaskType_doesNotThrow() throws TBladeException {
+        TaskList tasks = new TaskList();
+        tasks.add(new Todo("return book"));
+
+        tasks.add(new Deadline("return book", LocalDate.of(2026, 3, 15)));
+
+        assertEquals(2, tasks.size());
     }
 
     @Test

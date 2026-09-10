@@ -2,13 +2,16 @@ package tblade.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
 /**
  * Tests Todo, and through it the shared behaviour defined in the abstract Task class
- * (marking done/undone, the status icon, and the toString format).
+ * (marking done/undone, the status icon, the toString format, and equals/hashCode).
  */
 public class TodoTest {
     @Test
@@ -55,5 +58,33 @@ public class TodoTest {
         todo.markAsDone();
 
         assertEquals("[T][X] read book", todo.toString());
+    }
+
+    @Test
+    public void equals_sameDescription_returnsTrue() {
+        assertEquals(new Todo("read book"), new Todo("read book"));
+    }
+
+    @Test
+    public void equals_differentDescription_returnsFalse() {
+        assertNotEquals(new Todo("read book"), new Todo("return book"));
+    }
+
+    @Test
+    public void equals_differentTaskType_returnsFalse() {
+        assertNotEquals(new Todo("read book"), new Deadline("read book", LocalDate.of(2026, 3, 15)));
+    }
+
+    @Test
+    public void equals_ignoresDoneStatus() {
+        Todo done = new Todo("read book");
+        done.markAsDone();
+
+        assertEquals(new Todo("read book"), done);
+    }
+
+    @Test
+    public void hashCode_equalTasks_haveSameHashCode() {
+        assertEquals(new Todo("read book").hashCode(), new Todo("read book").hashCode());
     }
 }
