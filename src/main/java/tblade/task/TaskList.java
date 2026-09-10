@@ -47,12 +47,17 @@ public class TaskList {
      * Adds a task to the end of the list.
      *
      * @param task task to add
-     * @throws TBladeException if the list has reached its capacity
+     * @throws TBladeException if the list has reached its capacity, or an identical task
+     *         (same type, description, and any date/time fields) is already in the list
      */
     public void add(Task task) throws TBladeException {
         if (tasks.size() >= MAX_TASKS) {
             throw new TBladeException("The task list already has " + MAX_TASKS + " tasks. "
                     + "You cannot add another task in this version.");
+        }
+        if (tasks.contains(task)) {
+            throw new TBladeException("This task is already in your list: " + task
+                    + ". Use `list` to see it, or give this one a different description.");
         }
         tasks.add(task);
     }

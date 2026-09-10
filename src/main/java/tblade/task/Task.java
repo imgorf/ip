@@ -1,5 +1,7 @@
 package tblade.task;
 
+import java.util.Objects;
+
 /**
  * Represents one task in the task list and whether it has been completed.
  */
@@ -85,5 +87,36 @@ public abstract class Task {
     @Override
     public String toString() {
         return "[" + type.getIcon() + "][" + getStatusIcon() + "] " + description + getTimeDetails();
+    }
+
+    /**
+     * Returns whether this task and the given object have the same type and description.
+     * Completion status is not part of equality, so marking a task done does not change what
+     * it is considered a duplicate of. Subclasses with their own fields (e.g. a deadline's date)
+     * extend this with their own comparison.
+     *
+     * @param other the object to compare against
+     * @return {@code true} if {@code other} is a task of the same type with the same description
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof Task)) {
+            return false;
+        }
+        Task task = (Task) other;
+        return type == task.type && description.equals(task.description);
+    }
+
+    /**
+     * Returns a hash code consistent with {@link #equals(Object)}.
+     *
+     * @return the hash code for this task's type and description
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, description);
     }
 }
