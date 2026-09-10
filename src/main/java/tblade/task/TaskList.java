@@ -3,6 +3,7 @@ package tblade.task;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import tblade.exception.TBladeException;
 
@@ -107,12 +108,9 @@ public class TaskList {
      * @return a new task list containing only the matching tasks, in their original order
      */
     public TaskList find(String keyword) {
-        List<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.getDescription().contains(keyword)) {
-                matches.add(task);
-            }
-        }
+        List<Task> matches = tasks.stream()
+                .filter(task -> task.getDescription().contains(keyword))
+                .collect(Collectors.toCollection(ArrayList::new));
         return new TaskList(matches);
     }
 }

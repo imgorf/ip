@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import tblade.exception.TBladeException;
 import tblade.task.Deadline;
@@ -36,18 +38,14 @@ public class Storage {
      * @throws TBladeException if the data file cannot be read
      */
     public List<Task> load() throws TBladeException {
-        List<Task> tasks = new ArrayList<>();
         if (Files.notExists(dataFile)) {
-            return tasks;
+            return new ArrayList<>();
         }
         try {
-            for (String line : Files.readAllLines(dataFile)) {
-                Task task = parseTask(line);
-                if (task != null) {
-                    tasks.add(task);
-                }
-            }
-            return tasks;
+            return Files.readAllLines(dataFile).stream()
+                    .map(this::parseTask)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toCollection(ArrayList::new));
         } catch (IOException exception) {
             throw new TBladeException("I could not read your saved tasks: " + exception.getMessage());
         }
@@ -60,10 +58,9 @@ public class Storage {
      * @throws TBladeException if the data file cannot be written
      */
     public void save(List<Task> tasks) throws TBladeException {
-        List<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
-            lines.add(formatTask(task));
-        }
+        List<String> lines = tasks.stream()
+                .map(this::formatTask)
+                .collect(Collectors.toList());
         try {
             Files.createDirectories(dataFile.getParent());
             Files.write(dataFile, lines);
