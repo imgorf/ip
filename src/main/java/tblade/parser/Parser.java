@@ -10,6 +10,17 @@ import tblade.exception.TBladeException;
  * each command and validates that they are well-formed, before TBlade acts on them.
  */
 public class Parser {
+    private static final String TODO_COMMAND_WORD = "todo";
+    private static final String FIND_COMMAND_WORD = "find";
+    private static final String DEADLINE_COMMAND_WORD = "deadline";
+    private static final String EVENT_COMMAND_WORD = "event";
+    private static final String BY_MARKER = "/by";
+    private static final String BY_DELIMITER = " " + BY_MARKER;
+    private static final String FROM_MARKER = "/from";
+    private static final String FROM_DELIMITER = " " + FROM_MARKER;
+    private static final String TO_MARKER = "/to";
+    private static final String TO_DELIMITER = " " + TO_MARKER;
+
     /**
      * The description and due date parsed from a {@code deadline} command.
      *
@@ -43,7 +54,7 @@ public class Parser {
      * @throws TBladeException if the description is empty
      */
     public static String getTodoDescription(String command) throws TBladeException {
-        String description = command.substring(4).trim();
+        String description = command.substring(TODO_COMMAND_WORD.length()).trim();
         if (description.isEmpty()) {
             throw new TBladeException("The description of a todo cannot be empty. Use: todo DESCRIPTION");
         }
@@ -58,7 +69,7 @@ public class Parser {
      * @throws TBladeException if the keyword is empty
      */
     public static String getFindKeyword(String command) throws TBladeException {
-        String keyword = command.substring(4).trim();
+        String keyword = command.substring(FIND_COMMAND_WORD.length()).trim();
         if (keyword.isEmpty()) {
             throw new TBladeException("The search keyword cannot be empty. Use: find KEYWORD");
         }
@@ -73,18 +84,18 @@ public class Parser {
      * @throws TBladeException if the description, date, or date format is invalid
      */
     public static DeadlineArgs parseDeadlineArgs(String command) throws TBladeException {
-        String details = command.substring(8).trim();
-        if (details.isEmpty() || details.startsWith("/by")) {
+        String details = command.substring(DEADLINE_COMMAND_WORD.length()).trim();
+        if (details.isEmpty() || details.startsWith(BY_MARKER)) {
             throw new TBladeException("The description of a deadline cannot be empty. "
                     + "Use: deadline DESCRIPTION /by DATE");
         }
-        int byIndex = details.indexOf(" /by");
+        int byIndex = details.indexOf(BY_DELIMITER);
         if (byIndex < 0) {
             throw new TBladeException("A deadline needs a /by date. "
                     + "Use: deadline DESCRIPTION /by DATE");
         }
         String description = details.substring(0, byIndex).trim();
-        String by = details.substring(byIndex + 4).trim();
+        String by = details.substring(byIndex + BY_DELIMITER.length()).trim();
         if (by.isEmpty()) {
             throw new TBladeException("The /by date cannot be empty. "
                     + "Use: deadline DESCRIPTION /by DATE");
@@ -100,29 +111,29 @@ public class Parser {
      * @throws TBladeException if the description, start, or end is missing
      */
     public static EventArgs parseEventArgs(String command) throws TBladeException {
-        String details = command.substring(5).trim();
-        if (details.isEmpty() || details.startsWith("/from")) {
+        String details = command.substring(EVENT_COMMAND_WORD.length()).trim();
+        if (details.isEmpty() || details.startsWith(FROM_MARKER)) {
             throw new TBladeException("The description of an event cannot be empty. "
                     + "Use: event DESCRIPTION /from START /to END");
         }
-        int fromIndex = details.indexOf(" /from");
+        int fromIndex = details.indexOf(FROM_DELIMITER);
         if (fromIndex < 0) {
             throw new TBladeException("An event needs a /from start time. "
                     + "Use: event DESCRIPTION /from START /to END");
         }
         String description = details.substring(0, fromIndex).trim();
-        String times = details.substring(fromIndex + 6).trim();
+        String times = details.substring(fromIndex + FROM_DELIMITER.length()).trim();
         if (times.isEmpty()) {
             throw new TBladeException("The /from start time cannot be empty. "
                     + "Use: event DESCRIPTION /from START /to END");
         }
-        int toIndex = times.indexOf(" /to");
+        int toIndex = times.indexOf(TO_DELIMITER);
         if (toIndex < 0) {
             throw new TBladeException("An event needs a /to end time. "
                     + "Use: event DESCRIPTION /from START /to END");
         }
         String from = times.substring(0, toIndex).trim();
-        String to = times.substring(toIndex + 4).trim();
+        String to = times.substring(toIndex + TO_DELIMITER.length()).trim();
         if (from.isEmpty()) {
             throw new TBladeException("The /from start time cannot be empty. "
                     + "Use: event DESCRIPTION /from START /to END");

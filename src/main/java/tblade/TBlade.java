@@ -20,6 +20,13 @@ import tblade.ui.Ui;
  */
 public class TBlade {
     /**
+     * The data file path used when the application isn't given another one, shared by the
+     * console entry point ({@link #main}) and the GUI entry point ({@code tblade.gui.Main}) so
+     * both surfaces persist to the same file.
+     */
+    public static final String DEFAULT_DATA_FILE_PATH = "data/duke.txt";
+
+    /**
      * The text response to a command, and whether the application should keep running afterward.
      */
     private record CommandResult(String message, boolean isRunning) {
@@ -118,14 +125,16 @@ public class TBlade {
             throw new TBladeException("The list command does not take extra text. Use: list");
         } else if (command.equals("mark") || command.startsWith("mark ")) {
             int taskIndex = Parser.parseTaskIndex(command, "mark", tasks.size());
-            tasks.get(taskIndex).markAsDone();
+            Task task = tasks.get(taskIndex);
+            task.markAsDone();
             storage.save(tasks.getAll());
-            return new CommandResult(ui.formatMarked(tasks.get(taskIndex)), true);
+            return new CommandResult(ui.formatMarked(task), true);
         } else if (command.equals("unmark") || command.startsWith("unmark ")) {
             int taskIndex = Parser.parseTaskIndex(command, "unmark", tasks.size());
-            tasks.get(taskIndex).unmarkAsDone();
+            Task task = tasks.get(taskIndex);
+            task.unmarkAsDone();
             storage.save(tasks.getAll());
-            return new CommandResult(ui.formatUnmarked(tasks.get(taskIndex)), true);
+            return new CommandResult(ui.formatUnmarked(task), true);
         } else if (command.equals("delete") || command.startsWith("delete ")) {
             int taskIndex = Parser.parseTaskIndex(command, "delete", tasks.size());
             Task removedTask = tasks.remove(taskIndex);
@@ -136,19 +145,13 @@ public class TBlade {
             return new CommandResult(ui.formatMatchingTasks(tasks.find(keyword)), true);
         } else if (command.equals("todo") || command.startsWith("todo ")) {
             String description = Parser.getTodoDescription(command);
-            tasks.add(new Todo(description));
-            storage.save(tasks.getAll());
-            return new CommandResult(ui.formatAddedTask(tasks.get(tasks.size() - 1), tasks.size()), true);
+            return addTask(new Todo(description));
         } else if (command.equals("deadline") || command.startsWith("deadline ")) {
             Parser.DeadlineArgs args = Parser.parseDeadlineArgs(command);
-            tasks.add(new Deadline(args.description(), args.by()));
-            storage.save(tasks.getAll());
-            return new CommandResult(ui.formatAddedTask(tasks.get(tasks.size() - 1), tasks.size()), true);
+            return addTask(new Deadline(args.description(), args.by()));
         } else if (command.equals("event") || command.startsWith("event ")) {
             Parser.EventArgs args = Parser.parseEventArgs(command);
-            tasks.add(new Event(args.description(), args.from(), args.to()));
-            storage.save(tasks.getAll());
-            return new CommandResult(ui.formatAddedTask(tasks.get(tasks.size() - 1), tasks.size()), true);
+            return addTask(new Event(args.description(), args.from(), args.to()));
         } else {
             throw new TBladeException("I don't know that command. "
                     + "Use: todo, deadline, event, list, find, mark, unmark, delete, or bye.");
@@ -156,11 +159,24 @@ public class TBlade {
     }
 
     /**
-     * Starts the TBlade console application, persisting tasks to {@code data/duke.txt}.
+     * Adds a task to the list, persists the updated list, and builds the confirmation response.
+     *
+     * @param task the task to add
+     * @return the response text and whether the application should keep running
+     * @throws TBladeException if the task list is already at capacity or storage cannot be written
+     */
+    private CommandResult addTask(Task task) throws TBladeException {
+        tasks.add(task);
+        storage.save(tasks.getAll());
+        return new CommandResult(ui.formatAddedTask(task, tasks.size()), true);
+    }
+
+    /**
+     * Starts the TBlade console application, persisting tasks to {@link #DEFAULT_DATA_FILE_PATH}.
      *
      * @param args command-line arguments, which are not used by this application
      */
     public static void main(String[] args) {
-        new TBlade("data/duke.txt").run();
+        new TBlade(DEFAULT_DATA_FILE_PATH).run();
     }
 }
