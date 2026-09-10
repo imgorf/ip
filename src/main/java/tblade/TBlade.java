@@ -136,23 +136,30 @@ public class TBlade {
             return new CommandResult(ui.formatMatchingTasks(tasks.find(keyword)), true);
         } else if (command.equals("todo") || command.startsWith("todo ")) {
             String description = Parser.getTodoDescription(command);
-            tasks.add(new Todo(description));
-            storage.save(tasks.getAll());
-            return new CommandResult(ui.formatAddedTask(tasks.get(tasks.size() - 1), tasks.size()), true);
+            return addTask(new Todo(description));
         } else if (command.equals("deadline") || command.startsWith("deadline ")) {
             Parser.DeadlineArgs args = Parser.parseDeadlineArgs(command);
-            tasks.add(new Deadline(args.description(), args.by()));
-            storage.save(tasks.getAll());
-            return new CommandResult(ui.formatAddedTask(tasks.get(tasks.size() - 1), tasks.size()), true);
+            return addTask(new Deadline(args.description(), args.by()));
         } else if (command.equals("event") || command.startsWith("event ")) {
             Parser.EventArgs args = Parser.parseEventArgs(command);
-            tasks.add(new Event(args.description(), args.from(), args.to()));
-            storage.save(tasks.getAll());
-            return new CommandResult(ui.formatAddedTask(tasks.get(tasks.size() - 1), tasks.size()), true);
+            return addTask(new Event(args.description(), args.from(), args.to()));
         } else {
             throw new TBladeException("I don't know that command. "
                     + "Use: todo, deadline, event, list, find, mark, unmark, delete, or bye.");
         }
+    }
+
+    /**
+     * Adds a task to the list, persists the updated list, and builds the confirmation response.
+     *
+     * @param task the task to add
+     * @return the response text and whether the application should keep running
+     * @throws TBladeException if the task list is already at capacity or storage cannot be written
+     */
+    private CommandResult addTask(Task task) throws TBladeException {
+        tasks.add(task);
+        storage.save(tasks.getAll());
+        return new CommandResult(ui.formatAddedTask(task, tasks.size()), true);
     }
 
     /**
