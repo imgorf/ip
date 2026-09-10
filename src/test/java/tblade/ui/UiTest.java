@@ -99,6 +99,8 @@ public class UiTest {
             System.setOut(originalOut);
         }
 
-        assertEquals("Got it. I've added this task: 🐷\n  [T][ ] read book 🐷\n", capturedOutput.toString());
+        String lineSeparator = System.lineSeparator();
+        assertEquals("Got it. I've added this task: 🐷" + lineSeparator + "  [T][ ] read book 🐷" + lineSeparator,
+                capturedOutput.toString());
     }
 }
