@@ -118,14 +118,16 @@ public class TBlade {
             throw new TBladeException("The list command does not take extra text. Use: list");
         } else if (command.equals("mark") || command.startsWith("mark ")) {
             int taskIndex = Parser.parseTaskIndex(command, "mark", tasks.size());
-            tasks.get(taskIndex).markAsDone();
+            Task task = tasks.get(taskIndex);
+            task.markAsDone();
             storage.save(tasks.getAll());
-            return new CommandResult(ui.formatMarked(tasks.get(taskIndex)), true);
+            return new CommandResult(ui.formatMarked(task), true);
         } else if (command.equals("unmark") || command.startsWith("unmark ")) {
             int taskIndex = Parser.parseTaskIndex(command, "unmark", tasks.size());
-            tasks.get(taskIndex).unmarkAsDone();
+            Task task = tasks.get(taskIndex);
+            task.unmarkAsDone();
             storage.save(tasks.getAll());
-            return new CommandResult(ui.formatUnmarked(tasks.get(taskIndex)), true);
+            return new CommandResult(ui.formatUnmarked(task), true);
         } else if (command.equals("delete") || command.startsWith("delete ")) {
             int taskIndex = Parser.parseTaskIndex(command, "delete", tasks.size());
             Task removedTask = tasks.remove(taskIndex);
