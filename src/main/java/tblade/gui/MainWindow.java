@@ -58,6 +58,9 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     private void handleUserInput() {
+        assert tblade != null
+                : "tblade must already be set: Main.start() calls setTblade() right after loading the FXML "
+                + "and before the stage (and its input controls) is shown";
         String input = userInput.getText();
         String response = tblade.getResponse(input);
         dialogContainer.getChildren().addAll(

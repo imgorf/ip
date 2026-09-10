@@ -121,9 +121,15 @@ public class Storage {
             case TODO:
                 return "T | " + status + " | " + task.getDescription();
             case DEADLINE:
+                assert task instanceof Deadline
+                        : "a task reporting TaskType.DEADLINE must be a Deadline: only Deadline's constructor "
+                        + "passes that type to Task's constructor";
                 Deadline deadline = (Deadline) task;
                 return "D | " + status + " | " + task.getDescription() + " | " + deadline.getBy();
             case EVENT:
+                assert task instanceof Event
+                        : "a task reporting TaskType.EVENT must be an Event: only Event's constructor "
+                        + "passes that type to Task's constructor";
                 Event event = (Event) task;
                 return "E | " + status + " | " + task.getDescription() + " | "
                         + event.getFrom() + " | " + event.getTo();
