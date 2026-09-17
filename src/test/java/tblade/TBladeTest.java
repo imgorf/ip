@@ -102,6 +102,27 @@ public class TBladeTest {
     }
 
     @Test
+    public void getResponse_commandWithLeadingOrTrailingWhitespace_isStillRecognized() {
+        TBlade tblade = new TBlade(dataFilePath());
+
+        String response = tblade.getResponse("  todo read book  ");
+
+        assertEquals("Added to the kill list:\n"
+                + "  [T][ ] read book\n"
+                + "Now you have 1 tasks on the kill list.", response);
+    }
+
+    @Test
+    public void getResponse_byeWithOnlyTrailingWhitespace_isTreatedAsPlainBye() {
+        TBlade tblade = new TBlade(dataFilePath());
+
+        String response = tblade.getResponse("bye   ");
+
+        assertEquals("gg. Technoblade never dies — I'll be right here when you're back.", response);
+        assertFalse(tblade.isRunning());
+    }
+
+    @Test
     public void getResponse_addTodo_returnsConfirmationAndPersistsAcrossInstances() {
         TBlade tblade = new TBlade(dataFilePath());
 
