@@ -1,8 +1,11 @@
 package tblade.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +16,8 @@ import tblade.task.Todo;
 
 /**
  * Tests Ui's response text: the {@code formatX} methods are pure functions checked directly,
- * and {@code showMessage} (the one method that does I/O) is checked by capturing System.out.
+ * and the methods that do I/O ({@code showMessage}, {@code showLine}, {@code showWelcome},
+ * {@code readCommand}) are checked by redirecting System.out/System.in.
  */
 public class UiTest {
     private Ui ui;
@@ -102,5 +106,51 @@ public class UiTest {
         String lineSeparator = System.lineSeparator();
         assertEquals("Got it. I've added this task: 🐷" + lineSeparator + "  [T][ ] read book 🐷" + lineSeparator,
                 capturedOutput.toString());
+    }
+
+    @Test
+    public void showLine_printsSeparatorWithPigEmoji() {
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream capturedOutput = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(capturedOutput));
+        try {
+            ui.showLine();
+        } finally {
+            System.setOut(originalOut);
+        }
+
+        assertEquals("_".repeat(60) + " 🐷" + System.lineSeparator(), capturedOutput.toString());
+    }
+
+    @Test
+    public void showWelcome_printsBannerBetweenSeparatorsWithGreeting() {
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream capturedOutput = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(capturedOutput));
+        try {
+            ui.showWelcome();
+        } finally {
+            System.setOut(originalOut);
+        }
+
+        String lineSeparator = System.lineSeparator();
+        String separatorLine = "_".repeat(60) + " 🐷" + lineSeparator;
+        String output = capturedOutput.toString();
+        assertTrue(output.startsWith(separatorLine));
+        assertTrue(output.endsWith(separatorLine));
+        assertTrue(output.contains("Yo, chat! I'm TBlade — Blood God of your task list. 🐷" + lineSeparator));
+        assertTrue(output.contains("What's the move? 🐷" + lineSeparator));
+    }
+
+    @Test
+    public void readCommand_readsOneLineFromStandardInput() {
+        InputStream originalIn = System.in;
+        System.setIn(new ByteArrayInputStream("todo read book\n".getBytes()));
+        try {
+            Ui stdinUi = new Ui();
+            assertEquals("todo read book", stdinUi.readCommand());
+        } finally {
+            System.setIn(originalIn);
+        }
     }
 }
