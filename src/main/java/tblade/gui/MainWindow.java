@@ -33,11 +33,14 @@ public class MainWindow extends AnchorPane {
     private final Image tbladeImage = new Image(this.getClass().getResourceAsStream("/images/DaTBlade.png"));
 
     /**
-     * Binds the scroll pane so it always stays scrolled to the latest message.
+     * Binds the scroll pane so it always stays scrolled to the latest message, and keeps the
+     * dialog container's width tracking the scroll pane's viewport width so dialog boxes reflow
+     * (rewrap their text) as the window is resized.
      */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.prefWidthProperty().bind(scrollPane.widthProperty());
     }
 
     /**
