@@ -1,8 +1,6 @@
 # TBlade User Guide
 
-// Update the title above to match the actual product name
-
-// Product screenshot goes here
+![TBlade screenshot](Ui.png)
 
 // Product intro goes here
 
