@@ -89,14 +89,16 @@ public class TBlade {
     }
 
     /**
-     * Interprets and carries out a single command, updating {@link #isRunning}.
+     * Interprets and carries out a single command, updating {@link #isRunning}. Leading/trailing
+     * whitespace is stripped first so an accidental stray space before the command word (e.g.
+     * " todo read book") is still recognized, rather than falling through to "unknown command".
      *
      * @param command full command entered by the user
      * @return the text response to the command, including any error message
      */
     private String processCommand(String command) {
         try {
-            CommandResult result = executeCommand(command);
+            CommandResult result = executeCommand(command.trim());
             isRunning = result.isRunning();
             return result.message();
         } catch (TBladeException exception) {

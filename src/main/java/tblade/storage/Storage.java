@@ -62,7 +62,10 @@ public class Storage {
                 .map(this::formatTask)
                 .collect(Collectors.toList());
         try {
-            Files.createDirectories(dataFile.getParent());
+            Path parent = dataFile.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
             Files.write(dataFile, lines);
         } catch (IOException exception) {
             throw new TBladeException("I could not save your tasks: " + exception.getMessage());

@@ -53,6 +53,19 @@ public class StorageTest {
     }
 
     @Test
+    public void save_bareFilenameWithNoParentDirectory_doesNotThrow() throws TBladeException, IOException {
+        String bareFileName = "storage-test-bare-file.txt";
+        Storage storage = new Storage(bareFileName);
+        try {
+            storage.save(List.of(new Todo("read book")));
+
+            assertEquals(1, storage.load().size());
+        } finally {
+            Files.deleteIfExists(Path.of(bareFileName));
+        }
+    }
+
+    @Test
     public void load_corruptedLine_isSkippedButValidLinesRemain() throws TBladeException, IOException {
         Path dataFile = tempDir.resolve("duke.txt");
         Files.createDirectories(dataFile.getParent());
