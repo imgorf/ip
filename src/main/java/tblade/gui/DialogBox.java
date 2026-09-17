@@ -58,7 +58,9 @@ public class DialogBox extends HBox {
      * @return the user's dialog box
      */
     public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+        var db = new DialogBox(text, img);
+        db.getStyleClass().add("user-dialog");
+        return db;
     }
 
     /**
@@ -71,6 +73,7 @@ public class DialogBox extends HBox {
     public static DialogBox getTBladeDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();
+        db.getStyleClass().add("tblade-dialog");
         return db;
     }
 }
