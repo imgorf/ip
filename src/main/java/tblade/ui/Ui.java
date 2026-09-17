@@ -34,8 +34,8 @@ public class Ui {
     public void showWelcome() {
         showLine();
         BANNER.lines().forEach(this::printLine);
-        printLine("Hello! I'm TBlade.");
-        printLine("What can I do for you?");
+        printLine("Yo, chat! I'm TBlade — Blood God of your task list.");
+        printLine("What's the move?");
         showLine();
     }
 
@@ -71,7 +71,7 @@ public class Ui {
      * @return the formatted error text
      */
     public String formatError(String message) {
-        return "OOPS!!! " + message;
+        return "Chat, is this real? " + message;
     }
 
     /**
@@ -80,7 +80,7 @@ public class Ui {
      * @return the formatted farewell text
      */
     public String formatGoodbye() {
-        return "Bye. Hope to see you again soon!";
+        return "gg. Technoblade never dies — I'll be right here when you're back.";
     }
 
     /**
@@ -90,7 +90,7 @@ public class Ui {
      * @return the formatted task list text
      */
     public String formatTaskList(TaskList tasks) {
-        return formatNumberedTasks("Here are the tasks in your list:", tasks);
+        return formatNumberedTasks("Here's your kill list:", tasks);
     }
 
     /**
@@ -100,7 +100,7 @@ public class Ui {
      * @return the formatted matching-tasks text
      */
     public String formatMatchingTasks(TaskList matches) {
-        return formatNumberedTasks("Here are the matching tasks in your list:", matches);
+        return formatNumberedTasks("Matches found on the kill list:", matches);
     }
 
     /**
@@ -111,9 +111,9 @@ public class Ui {
      * @return the formatted confirmation text
      */
     public String formatAddedTask(Task task, int taskCount) {
-        return "Got it. I've added this task:\n"
+        return "Added to the kill list:\n"
                 + "  " + task + "\n"
-                + "Now you have " + taskCount + " tasks in the list.";
+                + "Now you have " + taskCount + " tasks on the kill list.";
     }
 
     /**
@@ -123,7 +123,7 @@ public class Ui {
      * @return the formatted confirmation text
      */
     public String formatMarked(Task task) {
-        return "Nice! I've marked this task as done:\n"
+        return "GG! Task conquered:\n"
                 + "  [X] " + task.getDescription();
     }
 
@@ -134,7 +134,7 @@ public class Ui {
      * @return the formatted confirmation text
      */
     public String formatUnmarked(Task task) {
-        return "OK, I've marked this task as not done yet:\n"
+        return "Back in the fight — not done yet:\n"
                 + "  [ ] " + task.getDescription();
     }
 
@@ -146,9 +146,9 @@ public class Ui {
      * @return the formatted confirmation text
      */
     public String formatDeleted(Task task, int taskCount) {
-        return "Noted. I've removed this task:\n"
+        return "Wiped from the kill list:\n"
                 + "  " + task + "\n"
-                + "Now you have " + taskCount + " tasks in the list.";
+                + "Now you have " + taskCount + " tasks on the kill list.";
     }
 
     /**

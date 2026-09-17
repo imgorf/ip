@@ -24,43 +24,43 @@ public class UiTest {
     }
 
     @Test
-    public void formatError_returnsMessageWithOopsPrefix() {
-        assertEquals("OOPS!!! The description of a todo cannot be empty. Use: todo DESCRIPTION",
+    public void formatError_returnsMessageWithTechnobladePrefix() {
+        assertEquals("Chat, is this real? The description of a todo cannot be empty. Use: todo DESCRIPTION",
                 ui.formatError("The description of a todo cannot be empty. Use: todo DESCRIPTION"));
     }
 
     @Test
     public void formatGoodbye_returnsFarewellMessage() {
-        assertEquals("Bye. Hope to see you again soon!", ui.formatGoodbye());
+        assertEquals("gg. Technoblade never dies — I'll be right here when you're back.", ui.formatGoodbye());
     }
 
     @Test
     public void formatAddedTask_returnsConfirmationAndTaskCount() {
         assertEquals(
-                "Got it. I've added this task:\n"
+                "Added to the kill list:\n"
                         + "  [T][ ] read book\n"
-                        + "Now you have 1 tasks in the list.",
+                        + "Now you have 1 tasks on the kill list.",
                 ui.formatAddedTask(new Todo("read book"), 1));
     }
 
     @Test
     public void formatMarked_returnsConfirmationWithXIcon() {
-        assertEquals("Nice! I've marked this task as done:\n  [X] read book",
+        assertEquals("GG! Task conquered:\n  [X] read book",
                 ui.formatMarked(new Todo("read book")));
     }
 
     @Test
     public void formatUnmarked_returnsConfirmationWithEmptyIcon() {
-        assertEquals("OK, I've marked this task as not done yet:\n  [ ] read book",
+        assertEquals("Back in the fight — not done yet:\n  [ ] read book",
                 ui.formatUnmarked(new Todo("read book")));
     }
 
     @Test
     public void formatDeleted_returnsConfirmationAndTaskCount() {
         assertEquals(
-                "Noted. I've removed this task:\n"
+                "Wiped from the kill list:\n"
                         + "  [T][ ] read book\n"
-                        + "Now you have 0 tasks in the list.",
+                        + "Now you have 0 tasks on the kill list.",
                 ui.formatDeleted(new Todo("read book"), 0));
     }
 
@@ -69,7 +69,7 @@ public class UiTest {
         TaskList tasks = TaskList.of(new Todo("first task"), new Todo("second task"));
 
         assertEquals(
-                "Here are the tasks in your list:\n"
+                "Here's your kill list:\n"
                         + "1.[T][ ] first task\n"
                         + "2.[T][ ] second task",
                 ui.formatTaskList(tasks));
@@ -79,13 +79,13 @@ public class UiTest {
     public void formatMatchingTasks_listsEachMatchNumberedFromOne() {
         TaskList matches = TaskList.of(new Todo("read book"));
 
-        assertEquals("Here are the matching tasks in your list:\n1.[T][ ] read book",
+        assertEquals("Matches found on the kill list:\n1.[T][ ] read book",
                 ui.formatMatchingTasks(matches));
     }
 
     @Test
     public void formatTaskList_emptyList_showsOnlyTheHeader() {
-        assertEquals("Here are the tasks in your list:", ui.formatTaskList(new TaskList()));
+        assertEquals("Here's your kill list:", ui.formatTaskList(new TaskList()));
     }
 
     @Test

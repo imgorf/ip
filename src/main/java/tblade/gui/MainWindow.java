@@ -48,7 +48,8 @@ public class MainWindow extends AnchorPane {
     public void setTblade(TBlade tblade) {
         this.tblade = tblade;
         dialogContainer.getChildren().add(
-                DialogBox.getTBladeDialog("Hello! I'm TBlade. What can I do for you?", tbladeImage));
+                DialogBox.getTBladeDialog("Yo, chat! I'm TBlade — Blood God of your task list. "
+                        + "What's the move?", tbladeImage));
     }
 
     /**
